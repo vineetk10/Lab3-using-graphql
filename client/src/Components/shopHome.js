@@ -96,7 +96,7 @@ function ShopHome(props) {
           </Col>
           <Col md={8}>
               <div className="row" id="cards">
-                    {items.map((item,index)=>{
+                    {items && items.map((item,index)=>{
                         return(
                             <div key={index} className="col-4 mb-4">
                                 <ItemCard edit={true} item={item}/>

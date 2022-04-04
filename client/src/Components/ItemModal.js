@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import { isAutheticated,signin,authenticate } from './../auth/helper/authapicalls';
 import { API } from "../backend";
 import axios from 'axios'
+const {user} = isAutheticated();
 const ItemModal = ({show,setShow,handleClose,shopId})=>{
     const [myImage,setMyImage] = useState("https://www.etsy.com/images/avatars/default_avatar_400x400.png");
     const [values,setValues] = useState({
@@ -58,7 +59,7 @@ const ItemModal = ({show,setShow,handleClose,shopId})=>{
         }
         var formData = new FormData();
         var fileField = document.querySelector("input[type='file']");
-
+        formData.append('UserId', user._id);
         formData.append('Name', Name);
         formData.append('Description', Description);
         formData.append('Price', Price);

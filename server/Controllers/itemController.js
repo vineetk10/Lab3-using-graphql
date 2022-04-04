@@ -5,11 +5,12 @@ const db = require('../Services/db');
 // const upload1 = upload.single('myImage')
 const multer = require('multer');
 const ItemManager = require('../Manager/itemManager');
+const User  = require("../models/userSchema");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // cb(null, '/home/ec2-user/Lab1/client/public/images')
-    cb(null, '/home/ec2-user/Lab1/client/public/images')
+    cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -28,8 +29,18 @@ exports.SaveItem = async (req,res) => {
         }
         else
         {
-               let rowsInserted =await db.query(`INSERT INTO Items(ShopId,ItemName,ItemDescription,Price, Quantity,ItemImage) VALUES('${req.body.ShopId}','${req.body.Name}','${req.body.Description}','${req.body.Price}','${req.body.Quantity}','${req.file.filename}');`);
-                return res.json({message:rowsInserted.affectedRows+" records inserted"});
+              let newItem = {"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
+              User.updateOne({_id:req.body.UserId}, 
+                {"$push":{'shop.items' :newItem}}, function (err, docs) {
+                if (err){
+                    console.log(err)
+                }
+                else{
+                    console.log("Updated Docs : ", docs);
+                }
+              });
+              //  let rowsInserted =await db.query(`INSERT INTO Items(ShopId,ItemName,ItemDescription,Price, Quantity,ItemImage) VALUES('${req.body.ShopId}','${req.body.Name}','${req.body.Description}','${req.body.Price}','${req.body.Quantity}','${req.file.filename}');`);
+                return res.json({message:" records inserted"});
         }
       })
      
