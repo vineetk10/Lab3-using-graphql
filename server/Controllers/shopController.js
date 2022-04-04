@@ -1,5 +1,6 @@
 const db = require('../Services/db');
 const ShopManager = require('../Manager/shopManager');
+const User  = require("../models/userSchema");
 
 exports.CheckAvailability = async (req,res) => {
       let isAvailable = await ShopManager.checkAvailability(req);
@@ -7,9 +8,14 @@ exports.CheckAvailability = async (req,res) => {
 }
 
 exports.SaveShop = async (req,res) => {
-      await db.query(`INSERT INTO Shop(ShopName,UserId) VALUES('${req.body.shopName}','${req.body.userId}');`);
-      let id = await db.query(`SELECT ShopId FROM Shop where ShopName="${req.body.shopName}"`);
-      // await db.query(`Update Users SET ShopId = '${id[0].ShopId}' where UserId=${req.body.userId};`);
-      return id==null ? res.json({shopId:false}) : res.json({shopId: id});
+      User.updateOne({_id:req.body.userId}, 
+            {'shop.shopName' :req.body.shopName}, function (err, docs) {
+            if (err){
+                console.log(err)
+            }
+            else{
+                console.log("Updated Docs : ", docs);
+            }
+        });
 }
 

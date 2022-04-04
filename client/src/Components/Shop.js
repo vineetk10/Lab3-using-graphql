@@ -42,7 +42,7 @@ function Shop() {
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({shopName:shopName, userId: user.UserId})
+          body: JSON.stringify({shopName:shopName, userId: user._id})
         })
         .then(response => {
           return response.json();
@@ -50,11 +50,7 @@ function Shop() {
         .catch(err => console.log(err));
         console.log(shop.shopId[0].ShopId);
           history.push({
-            pathname:"/shopHome", 
-            state: {  // location state
-              shopName:shopName, 
-              shopId: shop.shopId[0].ShopId
-            }
+            pathname:"/shopHome"
           });
       }
     }
