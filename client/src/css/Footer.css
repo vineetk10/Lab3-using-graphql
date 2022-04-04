@@ -1,0 +1,14 @@
+.footer{
+    flex-shrink: 0;
+  text-align: center;
+  color: white;
+
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: darkslateblue;
+  margin-top:auto; 
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+}

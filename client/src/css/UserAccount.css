@@ -1,0 +1,42 @@
+.person_favorite{
+    margin-top: 3rem;
+}
+
+.person_logo_name{
+    margin-top: 2rem;
+}
+
+.person__name{
+    font-size: 2rem;
+}
+/* 
+.person_favorite_items{
+    height: 8rem;
+    width: 5rem;
+    background-color:gainsboro ;
+    /* border-color: black; */
+    /* border-radius: 25%; */
+/* }  */
+
+.person_favorite_shops{
+    height: 8rem;
+    width: 5rem;
+    background-color:gainsboro ;
+    /* border-color: black; */
+    border-radius: 25%;
+    margin-left: 1rem;
+}
+
+
+.person_favorite_collection{
+    height: 8rem;
+    width: 5rem;
+    background-color:gainsboro ;
+    /* border-color: black; */
+    border-radius: 25%;
+    margin-left: 1rem;
+}
+
+.person_favorite_icon{
+    margin-top: 50%;
+}

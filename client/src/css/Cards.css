@@ -1,0 +1,18 @@
+#cards{
+    margin-top: 15px;
+    flex: 0 2 70%;
+    flex-wrap: wrap;
+    display: flex;
+    align-content: start;
+  }
+
+  @media (max-width:48rem){
+    #cards{
+      flex-direction: column;
+    }
+  }
+
+  .card_icons{
+    display: flex;
+    justify-content: space-between;
+  }

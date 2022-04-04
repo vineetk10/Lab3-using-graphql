@@ -1,0 +1,64 @@
+.personProfile_Details{
+    margin-left: 20%;
+    margin-right: 10%;
+}
+.personProfile_Details_Heading{
+    display: flex;
+    justify-content: space-between;
+}
+
+.personProfile_Details_Info{
+    /* border: '1px solid rgba(0, 0, 0, 0.05)'; */
+    height: 100%;
+    width: 100%;
+    border-color:beige;
+    /* background-color: antiquewhite; */
+}
+
+.user-avatar-circle-img{
+    height: 158px;
+    width: 158px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border: 1px solid #DADBD6;
+    margin-left: 15rem;
+}
+
+.user-avatar-circle {
+    height: 160px;
+    width: 160px;
+}
+
+
+.input-group .label, .input-group label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+    margin-right: 15px;
+    margin-top: 6px;
+    margin-bottom: 0px;
+    color: #333;
+    font-size: 1rem;
+}
+
+.full-name {
+    margin-top: 6px;
+    margin-bottom: 6px !important;
+}
+
+.full-name .request-name-change, .full-name .name-change-pending {
+    margin-left: 15px;
+}
+
+.section-alt .input-group {
+    padding: 15px 0;
+}
+
+.location-city{
+    margin-left: 10rem;
+}
+
+.personProfile_Button{
+    width: 10rem;
+}

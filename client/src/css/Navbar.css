@@ -1,0 +1,13 @@
+.Navbar_Search{
+    border-radius: 25px;
+    border: 2px solid black;
+    padding: 20px;
+    width: 200%;
+    height: 15px;
+    flex: none;
+}
+
+.Navbar_Dropdown{
+    display: flex;
+    align-items: center;
+}
