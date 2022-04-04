@@ -1,5 +1,5 @@
 const db = require('../Services/db');
-// const User  = require("../models/user");
+const User  = require("../models/userSchema");
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -42,11 +42,11 @@ exports.SaveUser = async (req,res) => {
 //   let shop = await db.query(`SELECT ShopId FROM Shop WHERE UserId=${req.body.UserId} LIMIT 1 `);
 //   return res.json({shopId : shop});
 // }
-// exports.GetShopOfUser = async (req,res) => {
-//   let shop = User.find({_id: req.body.UserId}, 'ShopId')
-//   let shop = await db.query(`SELECT ShopId FROM Shop WHERE UserId=${req.body.UserId} LIMIT 1 `);
-//   return res.json({shopId : shop});
-// }
+exports.GetShopOfUser = async (req,res) => {
+  let shop = await User.find({_id: req.body.UserId}, 'shop.shopName')
+  // let shop = await db.query(`SELECT ShopId FROM Shop WHERE UserId=${req.body.UserId} LIMIT 1 `);
+  return res.json({shopName : shop});
+}
 
 exports.GetUserImagePath = async (req,res) => {
   let imgPath = await db.query(`SELECT ImageName FROM Users WHERE UserId=${req.body.UserId} LIMIT 1 `);

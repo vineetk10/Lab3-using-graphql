@@ -8,6 +8,7 @@ const ItemManager = require('../Manager/itemManager');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    // cb(null, '/home/ec2-user/Lab1/client/public/images')
     cb(null, '/home/ec2-user/Lab1/client/public/images')
   },
   filename: function (req, file, cb) {

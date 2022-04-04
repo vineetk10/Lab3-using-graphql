@@ -45,23 +45,23 @@ function EtsyNavbar() {
               Accept: "application/json",
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({UserId: user.UserId })
+            body: JSON.stringify({UserId: user._id })
           })
           .then(jsonResponse=>{
             // setShop(jsonResponse.items);
              return jsonResponse.json();
           })
           .then(jsonResponse=>{
-              console.log(jsonResponse.shopId[0].ShopId);
-            setShop(jsonResponse.shopId[0].ShopId);
+            //   console.log(jsonResponse.shopName);
+            setShop(jsonResponse.shopName[0].shop.shopName);
              return jsonResponse;
           })
           .catch(err => console.log(err));
     }
 
     useEffect(()=>{
-        // if(user)
-        //     getShopOfUser();
+        if(user)
+            getShopOfUser();
     },[])
   return (
     <Navbar bg="light" variant="light">
@@ -75,7 +75,7 @@ function EtsyNavbar() {
                      <Nav.Link href="/person"><Heart size={30} color="black"/></Nav.Link>
                     {user && shop &&  <Nav.Link as={Link} to={{
         pathname: '/shopHome',
-        state: { shopId: shop},
+        // state: { shopId: shop},
       }}><ShopWindow size={30} color="black"/></Nav.Link>}
                     <Nav.Link href="#pricing">
                         <span className='Navbar_Dropdown'>
