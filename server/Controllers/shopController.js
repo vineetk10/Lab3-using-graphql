@@ -17,5 +17,6 @@ exports.SaveShop = async (req,res) => {
                 console.log("Updated Docs : ", docs);
             }
         });
+        return res.json({result:"Update successfull"});
 }
 

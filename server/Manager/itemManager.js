@@ -3,7 +3,7 @@ const db1 = require('../Services/db1');
 const User  = require("../models/userSchema");
 module.exports = {
     getItemsOfShop : async function(req){
-        User.find({_id:'req.body.UserId'},'shop', function (err, items) {
+        User.find({_id:'req.body.UserId'},'shop.items', function (err, items) {
             if (err) 
                 return { error: "No item Found "+err }
             return items

@@ -16,7 +16,7 @@ function ShopHome(props) {
   const [items,setItems] = useState([]);
   const handleShow = () => setShow(true);
   const [imagePath, setImagePath] = useState("https://www.etsy.com/images/avatars/default_avatar_400x400.png");
-  const getAllItemsOfShop = async(shopId) => {
+  const getAllItemsOfShop = async() => {
     let it= await fetch(`${API}/GetItemsOfShop`, {
       method: "POST",
       headers: {
@@ -56,8 +56,8 @@ function ShopHome(props) {
     .catch(err => console.log(err));
   }
   useEffect(()=>{
-    getAllItemsOfShop(location.state.shopId);
-    getUserImagePath(user.UserId);
+    getAllItemsOfShop();
+    // getUserImagePath(user.UserId);
   },[])
 
   return (
@@ -70,7 +70,7 @@ function ShopHome(props) {
           </Col>
           <Col md={3}>
             <Row>
-               <p>{location.state.shopName}</p>
+               <p></p>
             </Row>
             <Row>
               <Col>
@@ -92,7 +92,7 @@ function ShopHome(props) {
         <Row>
           <Col md={4}>
           <Button onClick={handleShow} variant="dark">Add Item</Button>
-          <ItemModal show ={show} setShow={setShow} handleClose={handleClose} shopId={location.state.shopId}/>
+          <ItemModal show ={show} setShow={setShow} handleClose={handleClose} shopId={""}/>
           </Col>
           <Col md={8}>
               <div className="row" id="cards">

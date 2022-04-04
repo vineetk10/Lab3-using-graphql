@@ -48,7 +48,7 @@ function Shop() {
           return response.json();
         })
         .catch(err => console.log(err));
-        console.log(shop.shopId[0].ShopId);
+        // console.log(shop.shopId[0].ShopId);
           history.push({
             pathname:"/shopHome"
           });
