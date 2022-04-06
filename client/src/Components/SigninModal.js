@@ -78,7 +78,7 @@ const SigninModal = ({show,setShow,handleClose})=>{
         //     console.log("Invalid form");
         //     return;
         // }
-        signup({fullName: Name,email:Email, encry_password:UserPassword})
+        signup({firstName: Name,email:Email, encry_password:UserPassword})
         .then(data =>{
             if(data.error){
               setValues({...values,error:data.error,loading:false})

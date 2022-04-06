@@ -15,7 +15,7 @@ function Home() {
   const [higherLimit, setHigherLimit] = useState(1000);
 
   const getAllItemsOfOtherShops = async(UserId) => {
-    let it= await fetch(`${API}/GetAllItemsOfOtherShops`, {
+    let it= await fetch(`${API}/GetAllItems`, {
       method: "POST",
       headers: {
         Accept: "application/json",

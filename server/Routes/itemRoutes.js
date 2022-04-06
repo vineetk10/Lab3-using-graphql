@@ -6,7 +6,7 @@ var router = express.Router();
  router.post('/EditItem',EditItem);
  router.post('/GetItemsOfShop',GetItemsOfShop);
  router.post('/GetAllItemsOfOtherShops',GetAllItemsOfOtherShops);
- router.get('/GetAllItems',GetAllItems);
+ router.post('/GetAllItems',GetAllItems);
  router.post('/GetAllFavoriteItems',GetAllFavoriteItems);
  router.post('/SaveFavItem',SaveFavItem);
  router.post("/RemoveFavItem",RemoveFavItem);

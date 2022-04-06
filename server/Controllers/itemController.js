@@ -6,6 +6,7 @@ const db = require('../Services/db');
 const multer = require('multer');
 const ItemManager = require('../Manager/itemManager');
 const User  = require("../models/userSchema");
+const Item  = require("../models/itemSchema");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -38,6 +39,17 @@ exports.SaveItem = async (req,res) => {
                 else{
                     console.log("Updated Docs : ", docs);
                 }
+              });
+
+              newItem.owner = req.body.UserId;
+              let item = new Item(newItem);
+              item.save((err, item)=>{
+                    if(err){
+                        return res.status(400).json({
+                            err: "NOT able to save item in DB"+"Error is"+err
+                        });
+                    }
+                    // res.json(item);
               });
               //  let rowsInserted =await db.query(`INSERT INTO Items(ShopId,ItemName,ItemDescription,Price, Quantity,ItemImage) VALUES('${req.body.ShopId}','${req.body.Name}','${req.body.Description}','${req.body.Price}','${req.body.Quantity}','${req.file.filename}');`);
                 return res.json({message:" records inserted"});

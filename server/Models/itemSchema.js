@@ -2,6 +2,10 @@ var mongoose = require("mongoose");
 
 var itemSchema = new mongoose.Schema(
     {
+        owner:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
         categoryName:{
             type: String
         },

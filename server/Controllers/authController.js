@@ -44,7 +44,12 @@ exports.signin = (req,res)=>{
                 error: "User email does not exists"
             })
         }
-
+        if(!user){
+            return res.status(400).json({
+                error: "No User Found"
+            })
+        }
+            
         if(!user.authenticate(password)){
             return res.status(401).json({
                 error: "Email and password does not match"
