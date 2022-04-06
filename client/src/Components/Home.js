@@ -96,7 +96,7 @@ function Home() {
                                 <ItemCard item={item}/>
                              </div>   
                         )
-                    }) : items.filter((item)=>item.ItemName.toLowerCase().includes(search.toLowerCase()) && item.Price>=lowerLimit && item.Price<=higherLimit).sort((a,b)=>a[sortBy]-b[sortBy]).map((item,index)=>{
+                    }) : items.filter((item)=>item.itemName.toLowerCase().includes(search.toLowerCase()) && item.price>=lowerLimit && item.price<=higherLimit).sort((a,b)=>a[sortBy]-b[sortBy]).map((item,index)=>{
                       return(
                           <div key={index} className="col-4 mb-4">
                               <ItemCard item={item}/>

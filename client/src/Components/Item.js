@@ -38,14 +38,14 @@ function Item() {
                     </Col>
                     <Col md={5}>
                       <Row>
-                        <p>{location.state.item.ItemDescription}</p>
-                        <p>{location.state.item.Price} {currency}</p>
+                        <p>{location.state.item.itemDescription}</p>
+                        <p>{location.state.item.price} {currency}</p>
                       </Row>
                       <Row>
 
                       </Row>
                       <Row>
-                        {location.state.item.Quantity>0 ? <Button onClick={addToCart}>Add to cart</Button> :
+                        {location.state.item.quantity>0 ? <Button onClick={addToCart}>Add to cart</Button> :
                           <div>Out Of Stock</div>}
                       </Row>
                     </Col>
