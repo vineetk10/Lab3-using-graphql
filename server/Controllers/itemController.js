@@ -30,28 +30,28 @@ exports.SaveItem = async (req,res) => {
         }
         else
         {
-              let newItem = {"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
+              let newItemObj = {"owner":req.body.UserId,"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
+              let item = new Item(newItemObj);
+              let itemId = await item.save()
+                            .then((item)=>{
+                              return item._id;
+                            })
+                            .catch((err)=>{
+                              return res.status(400).json({
+                                err: "NOT able to save item in DB"+"Error is"+err
+                            });
+                            })
+           
+              let newItem = {"itemId":itemId,"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
               User.updateOne({_id:req.body.UserId}, 
-                {"$push":{'shop.items' :newItem}}, function (err, docs) {
-                if (err){
-                    console.log(err)
-                }
-                else{
-                    console.log("Updated Docs : ", docs);
-                }
-              });
-
-              newItem.owner = req.body.UserId;
-              let item = new Item(newItem);
-              item.save((err, item)=>{
-                    if(err){
-                        return res.status(400).json({
-                            err: "NOT able to save item in DB"+"Error is"+err
-                        });
-                    }
-                    // res.json(item);
-              });
-              //  let rowsInserted =await db.query(`INSERT INTO Items(ShopId,ItemName,ItemDescription,Price, Quantity,ItemImage) VALUES('${req.body.ShopId}','${req.body.Name}','${req.body.Description}','${req.body.Price}','${req.body.Quantity}','${req.file.filename}');`);
+                {"$push":{'shop.items' :newItem}},)
+                .then((docs)=>{
+                  console.log("Updated Docs : ", docs);
+                })
+                .catch((err)=>{
+                  console.log(err)
+                })
+             
                 return res.json({message:" records inserted"});
         }
       })

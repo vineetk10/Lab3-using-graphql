@@ -41,37 +41,47 @@ var userSchema = new mongoose.Schema(
             default: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Shop.svg"
           },
           items: {
-            categoryName:{
-                type: String
-            },
-            itemName: {
-                type: String
-            },
-            itemDescription: {
-              type: String,
-              maxlength: 300
-            },
-            price: {
-              type: Number,
-              default: 0,
-              required: true
-            },
-            quantity: {
-              type: Number,
-              default: 0,
-              required: true
-            },
-            isFavorite: {
-                type: Boolean,
-                default: false,
-            },
-            salesCount: {
-                type: Number,
-                default: 0
-            },
-            itemImageUrl: {
-                type: String
-            }
+            default: [],
+            type: [
+              {
+                itemId:{
+                  type: mongoose.Schema.Types.ObjectId,
+                  ref: 'Item'
+                },
+                categoryName:{
+                    type: String
+                },
+                itemName: {
+                    type: String
+                },
+                itemDescription: {
+                  type: String,
+                  maxlength: 300
+                },
+                price: {
+                  type: Number,
+                  default: 0,
+                  required: true
+                },
+                quantity: {
+                  type: Number,
+                  default: 0,
+                  required: true
+                },
+                isFavorite: {
+                    type: Boolean,
+                    default: false,
+                },
+                salesCount: {
+                    type: Number,
+                    default: 0
+                },
+                itemImageUrl: {
+                    type: String
+                }
+              }
+            ]
+            
         }
       },
       items: {
