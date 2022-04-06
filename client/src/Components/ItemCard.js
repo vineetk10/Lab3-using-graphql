@@ -137,12 +137,12 @@ const Cards =({
            <Card.Img variant="top" src={imgPath}/>
             <Card.Body onClick={ItemClick} >
             {getARedirect(redirect)}
-                <Card.Title>{item.ItemName}</Card.Title>
+                <Card.Title>{item.itemName}</Card.Title>
                 <Card.Text>
-                    {item.ItemDescription}
+                    {item.itemDescription}
                 </Card.Text>
-                <p>Price: {item.Price} {currency}</p>
-                <p>Quantity: {item.Quantity}</p>
+                <p>Price: {item.price} {currency}</p>
+                <p>Quantity: {item.quantity}</p>
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
             </Card.Body>

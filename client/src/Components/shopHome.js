@@ -23,13 +23,13 @@ function ShopHome(props) {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({UserId: user.UserId })
+      body: JSON.stringify({UserId: user._id })
     })
     .then(response => {
       return response.json();
     })
     .then(jsonResponse=>{
-      setItems(jsonResponse.items);
+      setItems(jsonResponse.items.shop.items);
        return jsonResponse;
     })
     .catch(err => console.log(err));

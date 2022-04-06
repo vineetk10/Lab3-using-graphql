@@ -40,9 +40,73 @@ var userSchema = new mongoose.Schema(
             trim: true,
             unique: true
           },
-          items: [Item.schema]
+          items: {
+            categoryName:{
+                type: String
+            },
+            itemName: {
+                type: String
+            },
+            itemDescription: {
+              type: String,
+              maxlength: 300
+            },
+            price: {
+              type: Number,
+              default: 0,
+              required: true
+            },
+            quantity: {
+              type: Number,
+              default: 0,
+              required: true
+            },
+            isFavorite: {
+                type: Boolean,
+                default: false,
+            },
+            salesCount: {
+                type: Number,
+                default: 0
+            },
+            itemImageUrl: {
+                type: String
+            }
+        }
       },
-      items: [Item.schema]
+      items: {
+        categoryName:{
+            type: String
+        },
+        itemName: {
+            type: String
+        },
+        itemDescription: {
+          type: String,
+          maxlength: 300
+        },
+        price: {
+          type: Number,
+          default: 0,
+          required: true
+        },
+        quantity: {
+          type: Number,
+          default: 0,
+          required: true
+        },
+        isFavorite: {
+            type: Boolean,
+            default: false,
+        },
+        salesCount: {
+            type: Number,
+            default: 0
+        },
+        itemImageUrl: {
+            type: String
+        }
+      }
     }
 )
 
