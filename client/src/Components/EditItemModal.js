@@ -8,10 +8,10 @@ import axios from 'axios'
 const EditItemModal = ({show,setShow,handleClose,item})=>{
     const [myImage,setMyImage] = useState(item.ItemImage);
     const [values,setValues] = useState({
-        Name: item?item.ItemName:"",
-        Description: item?item.ItemDescription:"",
-        Price: item?item.Price:"",
-        Quantity: item?item.Quantity:"",
+        Name: item?item.itemName:"",
+        Description: item?item.itemDescription:"",
+        Price: item?item.price:"",
+        Quantity: item?item.quantity:"",
         success: false,
         error: {
             Name: "",
@@ -58,11 +58,12 @@ const EditItemModal = ({show,setShow,handleClose,item})=>{
         var formData = new FormData();
         var fileField = document.querySelector("input[type='file']");
 
+        formData.append('UserId', user._id);
         formData.append('Name', Name);
         formData.append('Description', Description);
         formData.append('Price', Price);
         formData.append('Quantity', Quantity);
-        formData.append('ItemId', item.ItemId);
+        formData.append('ItemId', item.itemId);
         formData.append('myImage', myImage);
 
         axios
