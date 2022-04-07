@@ -10,7 +10,7 @@ const Paymentb = ({ products }) => {
   const SaveOrder = async ()=>{
     let OrderId = axios
     .post(
-       `${API}/SaveOrder`,{"UserId":user.UserId, "Items": products} )
+       `${API}/SaveOrder`,{"UserId":user._id, "Items": products} )
     .then((response) => {
       if (response.status == 201) {
         console.log(response);

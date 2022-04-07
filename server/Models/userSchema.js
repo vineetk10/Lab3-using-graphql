@@ -84,38 +84,59 @@ var userSchema = new mongoose.Schema(
             
         }
       },
-      items: {
-        categoryName:{
-            type: String
-        },
-        itemName: {
-            type: String
-        },
-        itemDescription: {
-          type: String,
-          maxlength: 300
-        },
-        price: {
-          type: Number,
-          default: 0,
-          required: true
-        },
-        quantity: {
-          type: Number,
-          default: 0,
-          required: true
-        },
-        isFavorite: {
-            type: Boolean,
-            default: false,
-        },
-        salesCount: {
-            type: Number,
-            default: 0
-        },
-        itemImageUrl: {
-            type: String
-        }
+      orders:{
+        default: [],
+        type:[
+          {
+            orderDate: {
+              type: Date,
+              default: Date.now
+            },
+            items: {
+              default: [],
+              type: [
+                {
+                  itemId:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Item'
+                  },
+                  categoryName:{
+                      type: String
+                  },
+                  itemName: {
+                      type: String
+                  },
+                  itemDescription: {
+                    type: String,
+                    maxlength: 300
+                  },
+                  price: {
+                    type: Number,
+                    default: 0,
+                    required: true
+                  },
+                  quantity: {
+                    type: Number,
+                    default: 0,
+                    required: true
+                  },
+                  isFavorite: {
+                      type: Boolean,
+                      default: false,
+                  },
+                  salesCount: {
+                      type: Number,
+                      default: 0
+                  },
+                  itemImageUrl: {
+                      type: String
+                  }
+                }
+              ]
+              
+          }
+          }
+        ]
       }
     }
 )
