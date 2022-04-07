@@ -75,10 +75,7 @@ exports.EditItem = async (req,res) => {
               .catch((err)=>{
                 console.log("Edit failed "+err);
               })
-        // let rowsInserted =await db.query(`UPDATE Items SET ItemName='${req.body.Name}',ItemDescription = '${req.body.Description}' ,Price = '${req.body.Price}', Quantity = '${req.body.Quantity}' WHERE ItemId = ${req.body.ItemId}`);
-        // return res.json({message:rowsInserted.affectedRows+" records inserted"});
-        // {'shop.$.items.$.itemName':req.body.Name, 'shop.$.items.$.itemDescription' : req.body.Description,'shop.$.items.$.price' : req.body.Price, 'shop.$.items.$.quantity' : req.body.Quantity}
-        await User.updateOne({_id:req.body.UserId, 'shop.items.itemId': req.body.ItemId}, {'shop.items.$.price' : req.body.Price})
+        await User.updateOne({_id:req.body.UserId, 'shop.items.itemId': req.body.ItemId}, {'shop.items.$.price' : req.body.Price,'shop.items.$.itemName':req.body.Name, 'shop.items.$.itemDescription' : req.body.Description,'shop.items.$.quantity' : req.body.Quantity})
         .then((item)=>{
           console.log("Edit successful");
         })
