@@ -32,13 +32,11 @@ var userSchema = new mongoose.Schema(
       },
       shop: {
           shopName: {
-              type: String,
-              unique: true,
+              type: String
           },
           shopImageUrl: {
             type: String,
-            trim: true,
-            default: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Shop.svg"
+            trim: true
           },
           items: {
             default: [],
