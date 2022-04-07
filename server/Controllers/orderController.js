@@ -25,11 +25,4 @@ exports.GetAllPurchases = async(req,res)=>{
                             console.log(err)
                         })
     return res.json({orders:orders});;
-    // let sql_string = `Select ItemImage, ItemName, Quantity, Price,ShopName, OrderDate
-    // From Orders o inner join OrderDetails od on o.OrderId = od.OrderId
-    // inner join Items i on i.ItemId=od.ItemId
-    // Inner JOIN Shop s on i.ShopId=s.ShopId
-    // where o.UserId=${req.body.UserId}`;
-    // let purchases =await db.query(sql_string);
-    // return res.json({purchases:purchases});
 }
