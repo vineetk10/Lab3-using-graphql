@@ -43,7 +43,7 @@ const Cards =({
                   Accept: "application/json",
                   "Content-Type": "application/json"
                 },
-                body: JSON.stringify({UserId:user.UserId, ItemId: item.ItemId,IsFavorite:true })
+                body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
               })
               .then(response => {
                 return response.json();
@@ -61,7 +61,7 @@ const Cards =({
                   Accept: "application/json",
                   "Content-Type": "application/json"
                 },
-                body: JSON.stringify({UserId:user.UserId, ItemId: item.ItemId,IsFavorite:true })
+                body: JSON.stringify({UserId:user._id, ItemId: item._id,IsFavorite:true })
               })
               .then(response => {
                 return response.json();

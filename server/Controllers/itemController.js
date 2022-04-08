@@ -108,11 +108,24 @@ exports.GetAllFavoriteItems = async (req,res) => {
 }
 
 exports.SaveFavItem = async (req,res) => {
-    let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
-    return res.json({message:rowsInserted.affectedRows+" records inserted"});
+    await User.updateOne({_id: req.body.UserId},{"$push":{'favorite' :req.body.Item}})
+    .then((item)=>{
+      console.log("Updated successfully");
+    })
+    .catch((err)=>{
+      console.log("Updation Failed");
+    })
+    // let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
+    return res.json({message:" records inserted"});
 }
 
 exports.RemoveFavItem = async (req,res) => {
-    let rowsInserted = await db.query(`DELETE FROM UserItem where UserId='${req.body.UserId}' and  ItemId='${req.body.ItemId}'`);
-    return res.json({message:rowsInserted.affectedRows+" records inserted"});
+    await User.updateOne({_id: req.body.UserId},{"$pull":{'favorite' :{_id:req.body.ItemId}}})
+          .then((item)=>{
+            console.log("Deleted successfully");
+          })
+          .catch((err)=>{
+            console.log("Deletion Failed");
+          })
+    return res.json({message:" records inserted"});
 }

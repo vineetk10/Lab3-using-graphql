@@ -12,12 +12,6 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage, limits: '50mb' }).single('myImage');
-exports.getUserById = async (req,res) => {
-      let user = await db.query(`SELECT * FROM Users`);
-      req.profile = user;
-      return res.json(user);
-    //   next();
-}
 
 exports.SaveUser = async (req,res) => {
   upload(req, res, async function (err) {

@@ -39,7 +39,7 @@ function UserAccount() {
         return response.json();
         })
         .then(jsonResponse=>{
-        setItems(jsonResponse.items);
+        setItems(jsonResponse.items.favorite);
         return jsonResponse;
         })
         .catch(err => console.log(err));
@@ -55,7 +55,7 @@ function UserAccount() {
       }
 useEffect(()=>{
     if(user)
-      getAllFavoriteItems(user.UserId);
+      getAllFavoriteItems(user._id);
 },[])
   return (
     <div>
