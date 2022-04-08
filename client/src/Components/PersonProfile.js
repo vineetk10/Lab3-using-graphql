@@ -59,7 +59,7 @@ const SaveUser = async(event)=>{
     // }
     var formData = new FormData();
 
-        formData.append('UserId', user.UserId);
+        formData.append('UserId', user._id);
         formData.append('Gender', gender);
         formData.append('Country', country);
         formData.append('City', city);

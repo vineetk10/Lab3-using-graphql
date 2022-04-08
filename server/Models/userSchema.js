@@ -26,9 +26,26 @@ var userSchema = new mongoose.Schema(
         required: true
       },
       salt: String,
-      role: {
-        type: Number,
-        default: 0
+      gender:{
+        type: String
+      },
+      imagePath:{
+        type: String
+      },
+      country:{
+        type: String
+      },
+      city:{
+        type: String
+      },
+      birthdayMonth:{
+        type: String
+      },
+      birthdayYear:{
+        type: String
+      },
+      about:{
+        type: String
       },
       shop: {
           shopName: {

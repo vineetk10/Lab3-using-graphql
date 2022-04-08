@@ -66,7 +66,7 @@ function EtsyNavbar() {
   return (
     <Navbar bg="light" variant="light">
         <Container>
-            <Navbar.Brand href="#home">Etsy</Navbar.Brand>
+            <Navbar.Brand href="/">Etsy</Navbar.Brand>
                 <Nav className="me-auto">
                 <FormControl className="Navbar_Search me-2" type="search" placeholder="Search" aria-label="Search" onChange={handleChange} onKeyPress={handleSearch}/>
               <div>  <Search size={30} onClick={handleSearch}/></div>

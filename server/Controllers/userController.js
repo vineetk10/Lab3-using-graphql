@@ -3,8 +3,8 @@ const User  = require("../models/userSchema");
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
-    cb(null, '/home/ec2-user/Lab1/client/public/images')
+    cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
+    // cb(null, '/home/ec2-user/Lab1/client/public/images')
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -22,10 +22,14 @@ exports.SaveUser = async (req,res) => {
     }
     else
     {
-      let rowsInserted = await db.query(`UPDATE Users SET Gender = '${req.body.Gender}', ImageName = '${req.file.filename}', Country = '${req.body.Country}', City = '${req.body.City}', BirthdayMonth = '${req.body.BirthdayMonth}', BirthdayYear = '${req.body.BirthdayYear}', About = '${req.body.About}' WHERE UserId = '${req.body.UserId}'`);
-      return res.json({message:rowsInserted.affectedRows+" records inserted"});
-          //  let rowsInserted =await db.query(`INSERT INTO Items(ShopId,ItemName,ItemDescription,Price, Quantity,ItemImage) VALUES('${req.body.ShopId}','${req.body.Name}','${req.body.Description}','${req.body.Price}','${req.body.Quantity}','${req.file.filename}');`);
-          //   return res.json({message:rowsInserted.affectedRows+" records inserted"});
+      await User.updateOne({_id:req.body.UserId},{'gender':req.body.Gender,'imagePath':req.file.filename,'country':req.body.Country,'city':req.body.City,'birthdayMonth':req.body.BirthdayMonth,'birthdayYear':req.body.BirthdayYear,'about':req.body.About})
+            .then((user)=>{
+              console.log("Updated successfully")
+            })
+            .catch((err)=>{
+              console.log("Updation unsuccessfull "+err)
+            })
+      return res.json({message:" records inserted"});
     }
   })
   // let rowsInserted = await db.query(`UPDATE USERS SET Gender = '${req.body.Gender}', UserImage = '${req.body.UserImage}', Country = '${req.body.Country}', City = '${req.body.City}', BirthdayMonth = '${req.body.BirthdayMonth}', BirthdayYear = '${req.body.BirthdayYear}', About = '${req.body.About}' WHERE UserId = '${req.body.UserId}'`);
