@@ -15,14 +15,17 @@ module.exports = {
     },
 
     getAllItemsOfOtherShops : async function(req){
-        User.find({_id:req.body.UserId},'items', function (err, items) {
-            if (err) 
-                return { error: "No item Found "+err }
+        let items  = await Item.find({owner : {$ne: req.body.UserId}})
+        .then((items)=>{
             return items
-          })
+        })
+        .catch((err)=>{
+            return { error: "No item Found "+err }
+        })
+        return items;
     },
     getAllItems : async function(req){
-        let items  = await Item.find({owner : {$ne: req.body.UserId}})
+        let items  = await Item.find()
                             .then((items)=>{
                                 return items
                             })

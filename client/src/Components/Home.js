@@ -15,11 +15,12 @@ function Home() {
   const [higherLimit, setHigherLimit] = useState(1000);
 
   const getAllItemsOfOtherShops = async(UserId) => {
-    let it= await fetch(`${API}/GetAllItems`, {
+    let it= await fetch(`${API}/GetAllItemsOfOtherShops`, {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user.token}`
       },
       body: JSON.stringify({UserId: UserId })
     })
@@ -55,7 +56,7 @@ function Home() {
   }
   useEffect(()=>{
     if(user)
-      getAllItemsOfOtherShops(user.UserId);
+      getAllItemsOfOtherShops(user._id);
     else
       getAllItems();
   },[])

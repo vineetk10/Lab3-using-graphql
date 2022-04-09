@@ -6,7 +6,6 @@ var router = express.Router();
 // const { check , validationResult } = require('express-validator');
 
 // router.param("userId",getUserById);
-
 router.post('/signup',[
     // check("FullName","FullName should be at least 3 characters").isLength({ min: 3 }),
     // check("Email","Email is incorrect").isEmail(),
