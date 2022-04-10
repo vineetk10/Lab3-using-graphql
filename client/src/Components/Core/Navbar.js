@@ -4,17 +4,17 @@ import { Heart,Bell, PersonCircle,Cart4,CaretDownFill,BoxArrowLeft, ShopWindow,S
 import {isAutheticated,signout} from '../../auth/helper/authapicalls'
 import "../../css/Navbar.css"
 import SigninModal from '../SigninModal';
-import { SearchContext } from "../../context/SearchContext";
-import { CHANGE_SEARCH } from "../../context/action.types";
+import { CHANGE_SEARCH } from "../../action.types";
 import { API } from "../../backend";
 import { Link, Redirect,useHistory } from 'react-router-dom';
+import { connect } from "react-redux";
+
 const {user}= isAutheticated();
-function EtsyNavbar() {
+function EtsyNavbar({markComplete}) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [searchText,setSearchText] = useState("");
-    const { dispatch } = useContext(SearchContext);
     const [shop, setShop] = useState();
     const [item, setItem] = useState([]);
     const history = useHistory();
@@ -26,10 +26,7 @@ function EtsyNavbar() {
 
     const handleSearch = (e)=>{
         if(e.key==="Enter" || !e.key){
-            dispatch({
-                type: CHANGE_SEARCH,
-                payload: searchText
-              });
+            markComplete(searchText)
         }
         else{
             setSearchText(e.target.value);
@@ -108,4 +105,13 @@ function EtsyNavbar() {
   )
 }
 
-export default EtsyNavbar
+const mapDispatchToProps = (dispatch) => ({
+    markComplete: (searchText) => {
+        dispatch({
+            type: CHANGE_SEARCH,
+            payload: searchText
+          });
+    },
+  });
+
+export default connect(null, mapDispatchToProps)(EtsyNavbar)

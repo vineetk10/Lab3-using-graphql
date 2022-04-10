@@ -6,9 +6,11 @@ import { isAutheticated } from './../auth/helper/authapicalls';
 import Footer from './Core/Footer';
 import { SearchContext } from "../context/SearchContext";
 import { DropdownButton,Dropdown } from 'react-bootstrap'
+import { connect } from "react-redux";
+
 const {user} = isAutheticated();
-function Home() {
-  const { search } = useContext(SearchContext);
+function Home({search}) {
+  // const { search } = useContext(SearchContext);
   const [items,setItems] = useState([]);
   const [sortBy, setSortBy] = useState("Price");
   const [lowerLimit, setLowerLimit] = useState(0);
@@ -112,4 +114,9 @@ function Home() {
   )
 }
 
-export default Home
+const mapStateToProps = state => {
+  return { search: state.search };
+};
+export default connect(mapStateToProps)(Home);
+
+// export default Home

@@ -13,11 +13,13 @@ import Cart from './Components/Cart';
 import Purchases from './Components/Purchases';
 import { SearchContext } from "./context/SearchContext";
 import { CurrencyContext } from "./context/CurrencyContext";
+import { Provider } from "react-redux";
+import store from "./store";
 function App() {
   const [search, dispatch] = useReducer(itemReducer, '');
   const [currency, dispatch1] = useReducer(currencyReducer, '$');
   return (
-    <SearchContext.Provider value={{search,dispatch}}>
+    <Provider store={store}>
       <CurrencyContext.Provider value={{currency,dispatch1}}>
     <div className="App">
       <Router>
@@ -55,7 +57,7 @@ function App() {
       </Router>
     </div>
     </CurrencyContext.Provider>
-    </SearchContext.Provider>
+    </Provider>
   );
 }
 
