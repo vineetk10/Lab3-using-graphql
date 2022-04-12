@@ -20,7 +20,6 @@ function App() {
   const [currency, dispatch1] = useReducer(currencyReducer, '$');
   return (
     <Provider store={store}>
-      <CurrencyContext.Provider value={{currency,dispatch1}}>
     <div className="App">
       <Router>
         <Switch>
@@ -56,7 +55,6 @@ function App() {
           </Switch>
       </Router>
     </div>
-    </CurrencyContext.Provider>
     </Provider>
   );
 }

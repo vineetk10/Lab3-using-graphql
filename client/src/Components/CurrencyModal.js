@@ -6,15 +6,16 @@ import countryList from 'react-select-country-list'
 import { isAutheticated,signin,authenticate,signup } from './../auth/helper/authapicalls';
 import getAllISOCodes from 'iso-country-currency'
 import { CurrencyContext} from "../context/CurrencyContext";
-import { CHANGE_CURRENCY } from "../context/action.types";
-const CurrencyModal = ({show,setShow,handleClose})=>{
+import { CHANGE_CURRENCY } from "../action.types";
+import { connect } from "react-redux";
+const CurrencyModal = ({show,setShow,handleClose,markComplete})=>{
     const [values,setValues] = useState({
         success: false,
         error: {
             
         }
     })
-    const { currency, dispatch1} = useContext(CurrencyContext);
+    // const { currency, dispatch1} = useContext(CurrencyContext);
 
     const [redirect,setRedirect] = useState(false);
     const {user} = isAutheticated()
@@ -30,10 +31,7 @@ const CurrencyModal = ({show,setShow,handleClose})=>{
       }
 
       const handleCurrency = event => {
-            dispatch1({
-                type: CHANGE_CURRENCY,
-                payload: event.value
-              });
+        markComplete(event.value)
     }
     const ValidateSurveyEntries = (errors)=>{
         let valid = true;
@@ -63,4 +61,14 @@ const CurrencyModal = ({show,setShow,handleClose})=>{
     )
 } 
 
-export default CurrencyModal;
+const mapDispatchToProps = (dispatch) => ({
+    markComplete: (currency) => {
+        dispatch({
+            type: CHANGE_CURRENCY,
+            payload: currency
+          });
+    },
+  });
+
+
+  export default connect(null, mapDispatchToProps)(CurrencyModal);

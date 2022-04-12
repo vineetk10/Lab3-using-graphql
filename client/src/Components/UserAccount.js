@@ -10,11 +10,11 @@ import ItemCard from "./ItemCard"
 import { API } from "../backend";
 import { SearchContext } from "../context/SearchContext";
 import { DropdownButton,Dropdown } from 'react-bootstrap'
-
+import { connect } from "react-redux";
 const {user}= isAutheticated();
 
-function UserAccount() {
-    const { search } = useContext(SearchContext);
+function UserAccount({search}) {
+    // const { search } = useContext(SearchContext);
     const history = useHistory();
     const [items,setItems] = useState([]);
     const [sortBy, setSortBy] = useState("Price");
@@ -123,7 +123,7 @@ useEffect(()=>{
                                 <ItemCard item={item} defaultIsFav={true}/>
                              </div>   
                         )
-                    }) : items.filter((item)=>item.ItemName.toLowerCase().includes(search.toLowerCase()) && item.Price>=lowerLimit && item.Price<=higherLimit).sort((a,b)=>a[sortBy]-b[sortBy]).map((item,index)=>{
+                    }) : items.filter((item)=>item.itemName.toLowerCase().includes(search.toLowerCase()) && item.price>=lowerLimit && item.price<=higherLimit).sort((a,b)=>a[sortBy]-b[sortBy]).map((item,index)=>{
                       return(
                           <div key={index} className="col-4 mb-4">
                               <ItemCard item={item} defaultIsFav={true}/>
@@ -136,5 +136,7 @@ useEffect(()=>{
     </div>
   )
 }
-
-export default UserAccount
+const mapStateToProps = state => {
+    return { search: state.search };
+  };
+  export default connect(mapStateToProps)(UserAccount)

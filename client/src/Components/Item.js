@@ -8,10 +8,12 @@ import EtsyNavbar from './Core/Navbar';
 import { addItemToCart } from "./Core/cartHelper";
 import { CurrencyContext} from "../context/CurrencyContext";
 import Footer from './Core/Footer';
-function Item() {
+import { connect } from "react-redux";
+
+function Item({currency}) {
     const location = useLocation();
     const [redirect, setRedirect] = useState(false);
-    const { currency, dispatch1} = useContext(CurrencyContext);
+    // const { currency, dispatch1} = useContext(CurrencyContext);
     const getARedirect = redirect => {
       if (redirect) {
         return <Redirect to="/cart" />;
@@ -55,5 +57,7 @@ function Item() {
     </div>
   )
 }
-
-export default Item
+const mapStateToProps = state => {
+  return { currency: state.currency };
+};
+export default connect(mapStateToProps)(Item)

@@ -8,6 +8,8 @@ import { Redirect } from "react-router-dom";
 import { addItemToCart, removeItemFromCart } from "./Core/cartHelper.js";
 import { CurrencyContext} from "../context/CurrencyContext";
 import EditItemModal from "./EditItemModal"
+import { connect } from "react-redux";
+
 const {user}= isAutheticated();
 const Cards =({
   // currency,
@@ -15,7 +17,8 @@ const Cards =({
   item,
   addtoCart = true,
   removeFromCart = false,
-  defaultIsFav = false
+  defaultIsFav = false,
+  currency
 })=>{
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState(null);
@@ -31,7 +34,7 @@ const Cards =({
     
     const imgPath = `/images/${item.ItemImage}`
     const [redirect, setRedirect] = useState(false);
-    const { currency, dispatch1} = useContext(CurrencyContext);
+    // const { currency, dispatch1} = useContext(CurrencyContext);
     const FavClick = ()=>{
         let val = !fav;
         setFav(!fav);
@@ -152,4 +155,8 @@ const Cards =({
     )
 }
 
-export default Cards
+const mapStateToProps = state => {
+  return { currency: state.currency };
+};
+
+export default connect(mapStateToProps)(Cards)
