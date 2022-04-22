@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useContext} from 'react';
-import { Card ,Button} from 'react-bootstrap';
+import { Card ,Button,Dropdown} from 'react-bootstrap';
 import { Heart, HeartFill,Pencil} from 'react-bootstrap-icons';
 import { API } from "../backend";
 import {isAutheticated,signout} from '../auth/helper/authapicalls'
@@ -9,7 +9,7 @@ import { addItemToCart, removeItemFromCart } from "./Core/cartHelper.js";
 import { CurrencyContext} from "../context/CurrencyContext";
 import EditItemModal from "./EditItemModal"
 import { connect } from "react-redux";
-
+import "../css/Cards.css"
 const {user}= isAutheticated();
 const Cards =({
   // currency,
@@ -27,11 +27,8 @@ const Cards =({
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    // let blob = null
-    
-    // if(item.ItemImage)
-    //   blob = new Blob(item.ItemImage.data);
-    
+    const [quantity, setQuantity] = useState(0);
+
     const imgPath = `/images/${item.ItemImage}`
     const [redirect, setRedirect] = useState(false);
     // const { currency, dispatch1} = useContext(CurrencyContext);
@@ -130,22 +127,25 @@ const Cards =({
     }
 
     return(
-        <Card style={{ width: '18rem' }}>
+        <Card style={{ width: '60rem' }}>
           <div className="card_icons">
             {!fav ? <Heart onClick={FavClick} size={30} color="black"/>:
                   <HeartFill onClick={FavClick} size={30} color="red"/>}
               {edit && <Pencil onClick={handleShow} size={30}/>}
               <EditItemModal show ={show} setShow={setShow} handleClose={handleClose} item={item}/>
           </div>
-           <Card.Img variant="top" src={imgPath}/>
-            <Card.Body onClick={ItemClick} >
+           <Card.Img onClick={ItemClick} variant="top" src={imgPath}/>
+            <Card.Body  >
             {getARedirect(redirect)}
                 <Card.Title>{item.itemName}</Card.Title>
-                <Card.Text>
+                <Card.Text className="card-text">
+                  <div className="card-text-description" onClick={ItemClick}>
                     {item.itemDescription}
+                  </div>
+                 <input  onChange={e=>setQuantity(e.target.value)} type="number"></input>
                 </Card.Text>
-                <p>Price: {item.price} {currency}</p>
-                <p>Quantity: {item.quantity}</p>
+                <p>Price: {quantity* item.price} {currency}</p>
+                <p>Quantity: {quantity}</p>
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
             </Card.Body>

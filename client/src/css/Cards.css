@@ -16,3 +16,13 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .card-text{
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .card-text-description{
+    order: 2;
+    margin-right: 30%;
+  }
