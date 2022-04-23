@@ -1,6 +1,8 @@
 const db = require('../Services/db');
 const User  = require("../models/userSchema");
 const multer = require('multer');
+const {uploadFile} = require('../s3')
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
@@ -22,7 +24,8 @@ exports.SaveUser = async (req,res) => {
     }
     else
     {
-      await User.updateOne({_id:req.body.UserId},{'gender':req.body.Gender,'imagePath':req.file.filename,'country':req.body.Country,'city':req.body.City,'birthdayMonth':req.body.BirthdayMonth,'birthdayYear':req.body.BirthdayYear,'about':req.body.About})
+      const result = await uploadFile(req.file);
+      await User.updateOne({_id:req.body.UserId},{'gender':req.body.Gender,'imagePath':result.Key,'country':req.body.Country,'city':req.body.City,'birthdayMonth':req.body.BirthdayMonth,'birthdayYear':req.body.BirthdayYear,'about':req.body.About})
             .then((user)=>{
               console.log("Updated successfully")
             })
@@ -47,7 +50,8 @@ exports.GetShopOfUser = async (req,res) => {
 }
 
 exports.GetUserImagePath = async (req,res) => {
-  let imgPath = await db.query(`SELECT ImageName FROM Users WHERE UserId=${req.body.UserId} LIMIT 1 `);
+  let imgPath = await User.find({_id: req.body.UserId}, 'imagePath')
+  // let shop = await db.query(`SELECT ShopId FROM Shop WHERE UserId=${req.body.UserId} LIMIT 1 `);
   return res.json({path : imgPath});
 }
 

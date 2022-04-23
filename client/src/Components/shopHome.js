@@ -15,7 +15,7 @@ function ShopHome(props) {
   const handleClose = () => setShow(false);
   const [items,setItems] = useState([]);
   const handleShow = () => setShow(true);
-  const [imagePath, setImagePath] = useState("https://www.etsy.com/images/avatars/default_avatar_400x400.png");
+  const [imagePath, setImagePath] = useState();
   const getAllItemsOfShop = async() => {
     let it= await fetch(`${API}/GetItemsOfShop`, {
       method: "POST",
@@ -48,16 +48,16 @@ function ShopHome(props) {
       return response.json();
     })
     .then(jsonResponse=>{
-      setImagePath("/images/"+jsonResponse.path[0].ImageName);
+      setImagePath(jsonResponse.path[0].imagePath);
       // setImagePath(`/public/images/${jsonResponse.path[0].ImageName}`);
-      console.log("/images/"+jsonResponse.path[0].ImageName)
+      console.log(jsonResponse.path[0].ImageName)
        return jsonResponse;
     })
     .catch(err => console.log(err));
   }
   useEffect(()=>{
     getAllItemsOfShop();
-    // getUserImagePath(user.UserId);
+    getUserImagePath(user._id);
   },[])
 
   return (
@@ -65,10 +65,14 @@ function ShopHome(props) {
       <Header />
       <Container>
         <Row>
-          <Col md={1}>
-            <ShopWindow/>
-          </Col>
           <Col md={3}>
+            {/* <ShopWindow/> */}
+            <a className="avatar user-avatar-circle">
+              {imagePath ? <img className="avatar_img user-avatar-circle-img" src={imagePath} alt="vineet Karmiani"></img>
+              :  <img className="avatar_img user-avatar-circle-img" src="https://www.etsy.com/images/avatars/default_avatar_400x400.png" alt="vineet Karmiani"></img>}
+            </a>
+          </Col>
+          <Col md={5}>
             <Row>
                <p></p>
             </Row>
@@ -81,12 +85,13 @@ function ShopHome(props) {
               </Col>
             </Row>
           </Col>
-          <Col md={4}>
-          </Col>
+          {/* <Col md={4}>
+          </Col> */}
           <Col md={1}>
             <p>SHOP OWNER</p>
-            <img className="avatar_img user-avatar-circle-img" src={imagePath} alt=""></img>
-            {user && <p>{user.FullName}</p>}
+            {imagePath ? <img className="avatar_img user-avatar-circle-img" alt="" src={`${API}/images/${imagePath}`}></img>
+            : <img className="avatar_img user-avatar-circle-img" alt="https://www.etsy.com/images/avatars/default_avatar_400x400.png" src="https://www.etsy.com/images/avatars/default_avatar_400x400.png"></img>}
+            {user && <p>{user.firstName}</p>}
           </Col>
         </Row>
         <Row>
