@@ -61,7 +61,7 @@ function ShopHome(props) {
           </Col>
           <Col md={5}>
             <Row>
-               <p></p>
+               <p>{myUser?.shop?.shopName}</p>
             </Row>
             <Row>
               <Col>
