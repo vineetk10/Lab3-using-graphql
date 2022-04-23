@@ -159,6 +159,11 @@ const Cards =({
                 <p>Quantity: {quantity}</p>
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
+                <div>
+                  <input type="checkbox" id="gift" name="scales"></input>
+                  <label for="gift">This order is a gift</label>
+                </div>
+                <textarea placeholder='Add a note to MOBODUC (optional)'></textarea>
             </Card.Body>
             <div className="col-12">{showAddToCart(addtoCart)}</div>
                 <div className="col-12">{showRemoveFromCart(removeFromCart)}</div>
