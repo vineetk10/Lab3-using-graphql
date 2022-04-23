@@ -62,6 +62,28 @@ exports.SaveItem = async (req,res) => {
    
 }
 
+exports.EditShop = async (req,res)=>{
+  upload(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+        return res.json({message: err});
+    } else if (err) {
+        return res.json({message: "Upload failed"});
+    }
+    else
+    {
+          const result = await uploadFile(req.file);
+          console.log(result);
+          await User.updateOne({_id:req.body.UserId}, {'shop.shopImageUrl': result.Key})
+          .then((item)=>{
+            console.log("Edit successful");
+          })
+          .catch((err)=>{
+            console.log("Edit failed "+err);
+          })
+          return res.json({message: "Upload sucessfull"});;
+    }
+  })
+}
 exports.EditItem = async (req,res) => {
   upload(req, res, async function (err) {
     if (err instanceof multer.MulterError) {

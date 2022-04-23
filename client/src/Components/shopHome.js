@@ -5,6 +5,7 @@ import {Container,Row,Col,Button} from 'react-bootstrap'
 import { ShopWindow } from 'react-bootstrap-icons';
 import { isAutheticated } from './../auth/helper/authapicalls';
 import ItemModal from './ItemModal';
+import ShopModal from './ShopModal';
 import { API } from "../backend";
 import ItemCard from "./ItemCard"
 import Footer from './Core/Footer';
@@ -12,9 +13,12 @@ const {user} = isAutheticated();
 function ShopHome(props) {
   const location = useLocation();
   const [show, setShow] = useState(false);
+  const [showShopModal, setShowShopModal] = useState(false);
   const handleClose = () => setShow(false);
+  const handleShopClose = () => setShowShopModal(false);
   const [items,setItems] = useState([]);
   const handleShow = () => setShow(true);
+  const handleShowShop = () => setShowShopModal(true);
   const [imagePath, setImagePath] = useState();
   const [shopImagePath, setShopImagePath] = useState();
   const [myUser, setMyUser] = useState(user);
@@ -51,7 +55,7 @@ function ShopHome(props) {
           <Col md={3}>
             {/* <ShopWindow/> */}
             <a className="avatar user-avatar-circle">
-              {shopImagePath ? <img className="avatar_img user-avatar-circle-img" src={imagePath} alt="vineet Karmiani"></img>
+              {myUser?.shop?.shopImageUrl ? <img className="avatar_img user-avatar-circle-img" src={`${API}/images/${myUser.shop.shopImageUrl}`} alt="vineet Karmiani"></img>
               :  <img className="avatar_img user-avatar-circle-img" src="https://www.etsy.com/images/avatars/default_avatar_400x400.png" alt="vineet Karmiani"></img>}
             </a>
           </Col>
@@ -61,8 +65,8 @@ function ShopHome(props) {
             </Row>
             <Row>
               <Col>
-                <Button onClick={handleShow} variant="dark">Edit Shop</Button>
-                <ItemModal show ={show} setShow={setShow} handleClose={handleClose} shopId={""}/>
+                <Button onClick={handleShowShop} variant="dark">Edit Shop</Button>
+                <ShopModal show ={showShopModal} setShow={setShowShopModal} handleClose={handleShopClose} shopId={""}/>
               </Col>
               <Col>
               <Button  variant="light">Favorite Shop</Button>
