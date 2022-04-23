@@ -1,10 +1,12 @@
 import { createStore, combineReducers } from "redux";
 import search from "./reducer/search";
 import currency from "./reducer/currency";
+import cartPrice from "./reducer/cartPrice";
 
 const rootReducer = combineReducers({
     search,
-    currency
+    currency,
+    cartPrice
 });
 
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__({

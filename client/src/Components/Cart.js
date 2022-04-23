@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import ItemCard from "../Components/ItemCard.js";
+import ItemCard from "../Components/CartCard.js";
 import Header from "./Core/Header";
 import { loadCart } from "./Core/cartHelper.js";
 import Paymentb from "./Payment.js";
 
-const Cart = () => {
+const Cart = ({totalPrice,markComplete}) => {
   const [products, setProducts] = useState([]);
   const [reload, setReload] = useState(false);
 
@@ -59,4 +59,5 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+
+export default Cart
