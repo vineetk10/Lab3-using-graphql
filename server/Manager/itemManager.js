@@ -1,7 +1,7 @@
-const db = require('../Services/db');
-const db1 = require('../Services/db1');
 const User  = require("../models/userSchema");
 const Item  = require("../models/itemSchema");
+var kafka = require('../kafka/client');
+
 module.exports = {
     getItemsOfShop : async function(req){
            let items = await User.findOne({_id:req.body.UserId},'shop.items')
