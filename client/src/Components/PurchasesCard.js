@@ -9,20 +9,16 @@ import { addItemToCart, removeItemFromCart } from "./Core/cartHelper.js";
 import { CurrencyContext} from "../context/CurrencyContext";
 import EditItemModal from "./EditItemModal"
 import { connect } from "react-redux";
-import "../css/Cards.css"
-import { CHANGE_TOTAL_PRICE } from "../action.types";
 
 const {user}= isAutheticated();
-const Cards =({
+const PurchasesCards =({
   // currency,
   edit,
   item,
   addtoCart = true,
   removeFromCart = false,
   defaultIsFav = false,
-  currency,
-  totalPrice,
-  markComplete
+  currency
 })=>{
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState(null);
@@ -31,7 +27,8 @@ const Cards =({
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(0);
+
     const imgPath = `/images/${item.ItemImage}`
     const [redirect, setRedirect] = useState(false);
     // const { currency, dispatch1} = useContext(CurrencyContext);
@@ -129,14 +126,6 @@ const Cards =({
       });
     }
 
-    const changeQuantity = (e)=>{
-        if(e.target.value>=quantity)
-          markComplete(totalPrice+item.price);
-        else
-          markComplete(totalPrice-item.price);
-        item.quantity = e.target.value;
-        setQuantity(e.target.value);
-    }
     return(
         <Card style={{ width: '20rem' }}>
           <div className="card_icons">
@@ -149,14 +138,11 @@ const Cards =({
             <Card.Body  >
             {getARedirect(redirect)}
                 <Card.Title>{item.itemName}</Card.Title>
-                <Card.Text className="card-text">
-                  <div className="card-text-description" onClick={ItemClick}>
+                <Card.Text>
                     {item.itemDescription}
-                  </div>
-                 <input  onChange={changeQuantity} type="number"></input>
                 </Card.Text>
-                <p>Price: {quantity* item.price} {currency}</p>
-                <p>Quantity: {quantity}</p>
+                <p>Price: {item.quantity * item.price} {currency}</p>
+                <p>Quantity: {item.quantity}</p>
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
             </Card.Body>
@@ -167,17 +153,8 @@ const Cards =({
 }
 
 const mapStateToProps = state => {
-  return { currency: state.currency , totalPrice: state.cartPrice};
+  return { currency: state.currency };
 };
 
 
-const mapDispatchToProps = (dispatch) => ({
-    markComplete: (totalPrice) => {
-        dispatch({
-            type: CHANGE_TOTAL_PRICE,
-            payload: totalPrice
-          });
-    },
-  });
-
-export default connect(mapStateToProps,mapDispatchToProps)(Cards)
+export default connect(mapStateToProps)(PurchasesCards)
