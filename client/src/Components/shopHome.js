@@ -16,27 +16,11 @@ function ShopHome(props) {
   const [items,setItems] = useState([]);
   const handleShow = () => setShow(true);
   const [imagePath, setImagePath] = useState();
-  const getAllItemsOfShop = async() => {
-    let it= await fetch(`${API}/GetItemsOfShop`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({UserId: user._id })
-    })
-    .then(response => {
-      return response.json();
-    })
-    .then(jsonResponse=>{
-      setItems(jsonResponse.items.shop.items);
-       return jsonResponse;
-    })
-    .catch(err => console.log(err));
+  const [shopImagePath, setShopImagePath] = useState();
+  const [myUser, setMyUser] = useState(user);
 
-  }
-  const getUserImagePath = (id)=>{
-    fetch(`${API}/GetUserImagePath`, {
+  const getUser =(id)=>{
+    fetch(`${API}/GetUser`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -48,16 +32,15 @@ function ShopHome(props) {
       return response.json();
     })
     .then(jsonResponse=>{
-      setImagePath(jsonResponse.path[0].imagePath);
+      setMyUser(jsonResponse.user);
       // setImagePath(`/public/images/${jsonResponse.path[0].ImageName}`);
-      console.log(jsonResponse.path[0].ImageName)
        return jsonResponse;
     })
     .catch(err => console.log(err));
   }
+
   useEffect(()=>{
-    getAllItemsOfShop();
-    getUserImagePath(user._id);
+    getUser(user._id);
   },[])
 
   return (
@@ -68,7 +51,7 @@ function ShopHome(props) {
           <Col md={3}>
             {/* <ShopWindow/> */}
             <a className="avatar user-avatar-circle">
-              {imagePath ? <img className="avatar_img user-avatar-circle-img" src={imagePath} alt="vineet Karmiani"></img>
+              {shopImagePath ? <img className="avatar_img user-avatar-circle-img" src={imagePath} alt="vineet Karmiani"></img>
               :  <img className="avatar_img user-avatar-circle-img" src="https://www.etsy.com/images/avatars/default_avatar_400x400.png" alt="vineet Karmiani"></img>}
             </a>
           </Col>
@@ -78,7 +61,8 @@ function ShopHome(props) {
             </Row>
             <Row>
               <Col>
-                <Button   variant="dark">Edit Shop</Button>
+                <Button onClick={handleShow} variant="dark">Edit Shop</Button>
+                <ItemModal show ={show} setShow={setShow} handleClose={handleClose} shopId={""}/>
               </Col>
               <Col>
               <Button  variant="light">Favorite Shop</Button>
@@ -89,9 +73,9 @@ function ShopHome(props) {
           </Col> */}
           <Col md={1}>
             <p>SHOP OWNER</p>
-            {imagePath ? <img className="avatar_img user-avatar-circle-img" alt="" src={`${API}/images/${imagePath}`}></img>
+            {myUser && myUser.imagePath ? <img className="avatar_img user-avatar-circle-img" alt="" src={`${API}/images/${myUser.imagePath}`}></img>
             : <img className="avatar_img user-avatar-circle-img" alt="https://www.etsy.com/images/avatars/default_avatar_400x400.png" src="https://www.etsy.com/images/avatars/default_avatar_400x400.png"></img>}
-            {user && <p>{user.firstName}</p>}
+            {myUser && <p>{myUser.firstName}</p>}
           </Col>
         </Row>
         <Row>
@@ -101,7 +85,7 @@ function ShopHome(props) {
           </Col>
           <Col md={8}>
               <div className="row" id="cards">
-                    {items && items.map((item,index)=>{
+                    {myUser && myUser?.shop?.items && myUser.shop.items.map((item,index)=>{
                         return(
                             <div key={index} className="col-4 mb-4">
                                 <ItemCard edit={true} item={item}/>

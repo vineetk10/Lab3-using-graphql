@@ -55,3 +55,9 @@ exports.GetUserImagePath = async (req,res) => {
   return res.json({path : imgPath});
 }
 
+exports.GetUser = async (req,res) => {
+  let user = await User.findOne({_id: req.body.UserId})
+  // let shop = await db.query(`SELECT ShopId FROM Shop WHERE UserId=${req.body.UserId} LIMIT 1 `);
+  return res.json({user : user});
+}
+
