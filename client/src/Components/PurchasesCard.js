@@ -143,6 +143,8 @@ const PurchasesCards =({
                 </Card.Text>
                 <p>Price: {item.quantity * item.price} {currency}</p>
                 <p>Quantity: {item.quantity}</p>
+                {item.isGift && <p>It's a Gift</p>}
+                {item.note && <p>Notes:- {item.note}</p>}
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
             </Card.Body>

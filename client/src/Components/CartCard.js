@@ -34,6 +34,9 @@ const Cards =({
     const [quantity, setQuantity] = useState(1);
     const imgPath = `/images/${item.ItemImage}`
     const [redirect, setRedirect] = useState(false);
+    const [isGift, setIsGift] = useState(false);
+    const [note, setNote] = useState();
+
     // const { currency, dispatch1} = useContext(CurrencyContext);
     const FavClick = ()=>{
         let val = !fav;
@@ -137,6 +140,17 @@ const Cards =({
         item.quantity = e.target.value;
         setQuantity(e.target.value);
     }
+
+    const changeGiftOption = (e)=>{
+      setIsGift(e.target.checked);
+      item.isGift = e.target.checked;
+    }
+
+    const changeNote = (e)=>{
+      setNote(e.target.value);
+      item.note = e.target.value;
+    }
+
     return(
         <Card style={{ width: '20rem' }}>
           <div className="card_icons">
@@ -160,10 +174,10 @@ const Cards =({
                 {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
                 <div>
-                  <input type="checkbox" id="gift" name="scales"></input>
+                  <input onChange={changeGiftOption} type="checkbox" id="gift"  name="scales"></input>
                   <label for="gift">This order is a gift</label>
                 </div>
-                <textarea placeholder='Add a note to MOBODUC (optional)'></textarea>
+                <textarea onChange={changeNote} placeholder='Add a note to MOBODUC (optional)'></textarea>
             </Card.Body>
             <div className="col-12">{showAddToCart(addtoCart)}</div>
                 <div className="col-12">{showRemoveFromCart(removeFromCart)}</div>
