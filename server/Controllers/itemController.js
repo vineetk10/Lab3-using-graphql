@@ -7,6 +7,7 @@ const multer = require('multer');
 const ItemManager = require('../Manager/itemManager');
 const User  = require("../models/userSchema");
 const Item  = require("../models/itemSchema");
+const {uploadFile} = require('../s3')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -30,7 +31,9 @@ exports.SaveItem = async (req,res) => {
         }
         else
         {
-              let newItemObj = {"owner":req.body.UserId,"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
+              const result = await uploadFile(req.file);
+              console.log(result);
+              let newItemObj = {"owner":req.body.UserId,"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":result.Key};
               let item = new Item(newItemObj);
               let itemId = await item.save()
                             .then((item)=>{
@@ -52,7 +55,7 @@ exports.SaveItem = async (req,res) => {
                   console.log(err)
                 })
              
-                return res.json({message:" records inserted"});
+                return res.send({imagePath: `/images/${result.Key}`});
         }
       })
      

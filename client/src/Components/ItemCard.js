@@ -9,7 +9,6 @@ import { addItemToCart, removeItemFromCart } from "./Core/cartHelper.js";
 import { CurrencyContext} from "../context/CurrencyContext";
 import EditItemModal from "./EditItemModal"
 import { connect } from "react-redux";
-
 const {user}= isAutheticated();
 const Cards =({
   // currency,
@@ -29,7 +28,7 @@ const Cards =({
     const handleShow = () => setShow(true);
     const [quantity, setQuantity] = useState(0);
 
-    const imgPath = `/images/${item.ItemImage}`
+    const imgPath = `/${item.itemImageUrl}`
     const [redirect, setRedirect] = useState(false);
     // const { currency, dispatch1} = useContext(CurrencyContext);
     const FavClick = ()=>{
@@ -134,7 +133,7 @@ const Cards =({
               {edit && <Pencil onClick={handleShow} size={30}/>}
               <EditItemModal show ={show} setShow={setShow} handleClose={handleClose} item={item}/>
           </div>
-           <Card.Img onClick={ItemClick} variant="top" src={imgPath}/>
+           <img onClick={ItemClick} variant="top" src={`${API}/images/${item.itemImageUrl}`}></img>
             <Card.Body  >
             {getARedirect(redirect)}
                 <Card.Title>{item.itemName}</Card.Title>
