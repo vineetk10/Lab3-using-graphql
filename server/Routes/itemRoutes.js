@@ -10,7 +10,7 @@ var {checkAuth} = require('../Utils/passport')
  router.post('/EditShop',EditShop);
  router.post('/GetItemsOfShop',GetItemsOfShop);
  router.post('/GetAllItemsOfOtherShops',GetAllItemsOfOtherShops);
- router.post('/GetAllItems',GetAllItems);
+ router.get('/GetAllItems',GetAllItems);
  router.post('/GetAllFavoriteItems',checkAuth(),GetAllFavoriteItems);
  router.post('/SaveFavItem',SaveFavItem);
  router.post("/RemoveFavItem",RemoveFavItem);
