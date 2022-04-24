@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 const User  = require("../Models/userSchema");
 
 exports.signup = (req,res)=>{
-
+    console.log("Reached signup");
    const user = new User(req.body);
    user.save((err, user)=>{
         if(err){
