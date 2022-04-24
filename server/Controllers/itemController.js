@@ -28,7 +28,7 @@ exports.SaveItem = async (req,res) => {
         if (err instanceof multer.MulterError) {
             return res.json({message: err});
         } else if (err) {
-            return res.json({message: "Upload failed"});
+            return res.json({message: "Upload failed "+err});
         }
         else
         {
