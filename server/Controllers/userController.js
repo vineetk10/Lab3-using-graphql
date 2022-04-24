@@ -1,5 +1,5 @@
 const db = require('../Services/db');
-const User  = require("../models/userSchema");
+const User  = require("../Models/userSchema");
 const multer = require('multer');
 const {uploadFile} = require('../s3')
 

@@ -1,6 +1,6 @@
 const db = require('../Services/db');
 const ShopManager = require('../Manager/shopManager');
-const User  = require("../models/userSchema");
+const User  = require("../Models/userSchema");
 
 exports.CheckAvailability = async (req,res) => {
       let isAvailable = await ShopManager.checkAvailability(req);

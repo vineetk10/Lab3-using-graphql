@@ -1,6 +1,6 @@
 
 const db = require('../Services/db');
-const User  = require("../models/userSchema");
+const User  = require("../Models/userSchema");
 var kafka = require('../kafka/client');
 
 exports.SaveOrder = async (req,res) => {

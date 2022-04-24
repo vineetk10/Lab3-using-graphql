@@ -1,5 +1,5 @@
-const User  = require("../models/userSchema");
-const Item  = require("../models/itemSchema");
+const User  = require("../Models/userSchema");
+const Item  = require("../Models/itemSchema");
 var kafka = require('../kafka/client');
 
 module.exports = {

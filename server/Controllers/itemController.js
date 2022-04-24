@@ -5,8 +5,8 @@ const db = require('../Services/db');
 // const upload1 = upload.single('myImage')
 const multer = require('multer');
 const ItemManager = require('../Manager/itemManager');
-const User  = require("../models/userSchema");
-const Item  = require("../models/itemSchema");
+const User  = require("../Models/userSchema");
+const Item  = require("../Models/itemSchema");
 const {uploadFile} = require('../s3')
 var kafka = require('../kafka/client');
 
