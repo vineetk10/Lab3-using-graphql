@@ -11,9 +11,10 @@ const Paymentb = ({ products,totalPrice,markComplete }) => {
   const history = useHistory();
     const {user} = isAutheticated()
   const SaveOrder = async ()=>{
+    let productWithQuantitiesMoreThanZero = products.filter((product)=>product.quantity!=="0");
     let OrderId = axios
     .post(
-       `${API}/SaveOrder`,{"UserId":user._id, "Items": products} )
+       `${API}/SaveOrder`,{"UserId":user._id, "Items": productWithQuantitiesMoreThanZero} )
     .then((response) => {
       if (response.status == 201) {
         console.log(response);
