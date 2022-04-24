@@ -123,7 +123,7 @@ exports.GetItemsOfShop = async (req,res) => {
 exports.GetAllItemsOfOtherShops = async (req,res) => {
     // let items = await ItemManager.getAllItemsOfOtherShops(req);
     // return res.json({items:items});
-
+    req.body.fn = "GetAllItemsOfOtherShops";
     kafka.make_request('post_items_1',req.body, function(err,results){
       console.log('in result');
       console.log(results);
@@ -146,15 +146,18 @@ exports.GetAllFavoriteItems = async (req,res) => {
 }
 
 exports.SaveFavItem = async (req,res) => {
-    await User.updateOne({_id: req.body.UserId},{"$push":{'favorite' :req.body.Item}})
-    .then((item)=>{
-      console.log("Updated successfully");
-    })
-    .catch((err)=>{
-      console.log("Updation Failed");
-    })
-    // let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
-    return res.json({message:" records inserted"});
+  req.body.fn = "SaveFavItem";
+  kafka.make_request('post_items_1',req.body, function(err,results){
+    console.log('in result');
+    console.log(results);
+    if (err){
+        console.log("Inside err");
+        return res.json({"error":err});
+    }else{
+        console.log("Inside else");
+        return res.json({items:results});
+        }
+      })
 }
 
 exports.RemoveFavItem = async (req,res) => {

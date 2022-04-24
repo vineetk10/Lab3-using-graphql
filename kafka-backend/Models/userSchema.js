@@ -145,6 +145,14 @@ var userSchema = new mongoose.Schema(
                   },
                   itemImageUrl: {
                       type: String
+                  },
+                  isGift: {
+                    type: Boolean,
+                    default: false
+                  },
+                  note: {
+                    type: String,
+                    maxlength: 300
                   }
                 }
               ]
