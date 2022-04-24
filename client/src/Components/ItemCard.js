@@ -142,7 +142,7 @@ const Cards =({
                 </Card.Text>
                 <p>Price: {item.price} {currency}</p>
                 <p>Quantity: {item.quantity}</p>
-                {item.ShopName && <p>Shop Name: {item.ShopName}</p>}
+                {item.shopName && <p>Shop Name: {item.shopName}</p>}
                 {item.OrderDate && <p>Order Date: {item.OrderDate}</p>}
             </Card.Body>
             <div className="col-12">{showAddToCart(addtoCart)}</div>
