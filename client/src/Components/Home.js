@@ -51,6 +51,7 @@ function Home({search}) {
       return response.json();
     })
     .then(jsonResponse=>{
+      console.log(jsonResponse);
       setItems(jsonResponse.items);
        return jsonResponse;
     })
