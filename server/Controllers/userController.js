@@ -5,8 +5,8 @@ const {uploadFile} = require('../s3')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
-    // cb(null, '/home/ec2-user/Lab1/client/public/images')
+    // cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
+    cb(null, '/home/ec2-user/Lab2/client/public/images')
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
