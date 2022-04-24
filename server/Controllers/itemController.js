@@ -47,7 +47,7 @@ exports.SaveItem = async (req,res) => {
                             })
            
               let newItem = {"itemId":itemId,"itemName":req.body.Name,"itemDescription":req.body.Description,"price":req.body.Price,"quantity":req.body.Quantity,"itemImageUrl":req.file.filename};
-              User.updateOne({_id:req.body.UserId}, 
+              await User.updateOne({_id:req.body.UserId}, 
                 {"$push":{'shop.items' :newItem}},)
                 .then((docs)=>{
                   console.log("Updated Docs : ", docs);
