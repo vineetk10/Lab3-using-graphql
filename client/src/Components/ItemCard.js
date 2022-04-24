@@ -19,6 +19,7 @@ const Cards =({
   defaultIsFav = false,
   currency
 })=>{
+  console.log(item);
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState(null);
     const [fav,setFav] = useState(defaultIsFav);
