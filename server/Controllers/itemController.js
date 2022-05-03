@@ -8,7 +8,6 @@ const ItemManager = require('../Manager/itemManager');
 const User  = require("../Models/userSchema");
 const Item  = require("../Models/itemSchema");
 const {uploadFile} = require('../s3')
-var kafka = require('../kafka/client');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -121,20 +120,20 @@ exports.GetItemsOfShop = async (req,res) => {
 }
 
 exports.GetAllItemsOfOtherShops = async (req,res) => {
-    // let items = await ItemManager.getAllItemsOfOtherShops(req);
-    // return res.json({items:items});
-    req.body.fn = "GetAllItemsOfOtherShops";
-    kafka.make_request('post_items_1',req.body, function(err,results){
-      console.log('in result');
-      console.log(results);
-      if (err){
-          console.log("Inside err");
-          return res.json({"error":err});
-      }else{
-          console.log("Inside else");
-          return res.json({items:results});
-          }
-        })
+    let items = await ItemManager.getAllItemsOfOtherShops(req);
+    return res.json({items:items});
+    // req.body.fn = "GetAllItemsOfOtherShops";
+    // kafka.make_request('post_items_1',req.body, function(err,results){
+    //   console.log('in result');
+    //   console.log(results);
+    //   if (err){
+    //       console.log("Inside err");
+    //       return res.json({"error":err});
+    //   }else{
+    //       console.log("Inside else");
+    //       return res.json({items:results});
+    //       }
+    //     })
 }
 exports.GetAllItems = async (req,res) => {
   let items = await ItemManager.getAllItems(req);
@@ -146,18 +145,28 @@ exports.GetAllFavoriteItems = async (req,res) => {
 }
 
 exports.SaveFavItem = async (req,res) => {
-  req.body.fn = "SaveFavItem";
-  kafka.make_request('post_items_1',req.body, function(err,results){
-    console.log('in result');
-    console.log(results);
-    if (err){
-        console.log("Inside err");
-        return res.json({"error":err});
-    }else{
-        console.log("Inside else");
-        return res.json({items:results});
-        }
-      })
+
+  await User.updateOne({_id: req.body.UserId},{"$push":{'favorite' :req.body.Item}})
+    .then((item)=>{
+      console.log("Updated successfully");
+    })
+    .catch((err)=>{
+      console.log("Updation Failed");
+    })
+    // let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
+    return res.json({message:" records inserted"});
+  // req.body.fn = "SaveFavItem";
+  // kafka.make_request('post_items_1',req.body, function(err,results){
+  //   console.log('in result');
+  //   console.log(results);
+  //   if (err){
+  //       console.log("Inside err");
+  //       return res.json({"error":err});
+  //   }else{
+  //       console.log("Inside else");
+  //       return res.json({items:results});
+  //       }
+  //     })
 }
 
 exports.RemoveFavItem = async (req,res) => {

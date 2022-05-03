@@ -8,6 +8,9 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 var bodyParser = require('body-parser');
 
+const {graphqlHTTP} = require('express-graphql');
+const schema = require('./schema/schema');
+
 const userRoutes = require("./Routes/userRoutes");
 const authRoutes = require("./Routes/authRoutes");
 const shopRoutes = require("./Routes/shopRoutes");
@@ -32,10 +35,15 @@ app.use(cors({ origin: true, credentials: true}));
 app.use(bodyParser.json({limit:'500mb'})); 
 app.use(bodyParser.urlencoded({extended:true})); 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://3.17.177.6:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+app.use("/graphql",graphqlHTTP({
+  schema,
+  graphiql: true
+}));
+
 app.get('/api/images/:key',(req,res)=>{
   const key = req.params.key
   const readStream = getFileStream(key)

@@ -1,6 +1,5 @@
 const User  = require("../Models/userSchema");
 const Item  = require("../Models/itemSchema");
-var kafka = require('../kafka/client');
 
 module.exports = {
     getItemsOfShop : async function(req){

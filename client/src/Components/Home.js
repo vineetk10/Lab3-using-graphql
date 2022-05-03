@@ -7,15 +7,36 @@ import Footer from './Core/Footer';
 import { SearchContext } from "../context/SearchContext";
 import { DropdownButton,Dropdown } from 'react-bootstrap'
 import { connect } from "react-redux";
+import { useApolloClient } from '@apollo/client';
+import {
+  gql
+} from "@apollo/client";
+
+const getAllItemsByQuery = gql`
+query GetAllItems {
+  items{
+    isFavorite,
+    itemDescription,
+    itemImageUrl,
+    itemName,
+    price,
+    quantity,
+    salesCount
+  }
+}
+`;
 
 const {user} = isAutheticated();
 function Home({search}) {
   // const { search } = useContext(SearchContext);
+  const client = useApolloClient();
   const [items,setItems] = useState([]);
   const [sortBy, setSortBy] = useState("Price");
   const [lowerLimit, setLowerLimit] = useState(0);
   const [higherLimit, setHigherLimit] = useState(1000);
-
+  // const { loading, error, data } = useQuery(getAllItemsByQuery);
+  // setItems(data);
+  // console.log("graphql data is ",data);
   const getAllItemsOfOtherShops = async(UserId) => {
     let it= await fetch(`${API}/GetAllItemsOfOtherShops`, {
       method: "POST",
@@ -38,24 +59,10 @@ function Home({search}) {
     .catch(err => console.log(err));
   }
   const getAllItems = async() => {
-    let it= await fetch(`${API}/GetAllItems`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
+    const { data } = await client.query({
+      query: getAllItemsByQuery
     })
-    .then(response => {
-      console.log(response);
-      
-      return response.json();
-    })
-    .then(jsonResponse=>{
-      console.log(jsonResponse);
-      setItems(jsonResponse.items);
-       return jsonResponse;
-    })
-    .catch(err => console.log(err));
+    setItems(data.items);
   }
   useEffect(()=>{
     if(user)

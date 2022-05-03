@@ -2,7 +2,7 @@ import './App.css';
 import React, { useReducer } from "react";
 import itemReducer from "../src/context/reducers/reducer";
 import currencyReducer from "../src/context/reducers/currencyReducer";
-import {BrowserRouter as Router,Switch, Route} from "react-router-dom"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import Home from './Components/Home';
 import UserAccount from './Components/UserAccount';
 import PersonProfile from './Components/PersonProfile';
@@ -15,47 +15,64 @@ import { SearchContext } from "./context/SearchContext";
 import { CurrencyContext } from "./context/CurrencyContext";
 import { Provider } from "react-redux";
 import store from "./store";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8001/graphql',
+  cache: new InMemoryCache()
+});
+
+
 function App() {
   const [search, dispatch] = useReducer(itemReducer, '');
   const [currency, dispatch1] = useReducer(currencyReducer, '$');
   return (
-    <Provider store={store}>
-    <div className="App">
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/person">
-            <UserAccount />
-          </Route>
-          <Route exact path="/personProfile">
-            <PersonProfile />
-          </Route>
-          <Route exact path="/shop">
-            <Shop />
-          </Route>
-          <Route exact path="/shopHome">
-            <ShopHome/>
-          </Route>
-          <Route exact path="/item">
-            <Item/>
-          </Route>
-          <Route exact path="/cart">
-            <Cart/>
-          </Route>
-          <Route exact path="/purchases">
-            <Purchases/>
-          </Route>
-          {/* <Route exact path="/chat">
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <div className="App">
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route exact path="/person">
+                <UserAccount />
+              </Route>
+              <Route exact path="/personProfile">
+                <PersonProfile />
+              </Route>
+              <Route exact path="/shop">
+                <Shop />
+              </Route>
+              <Route exact path="/shopHome">
+                <ShopHome />
+              </Route>
+              <Route exact path="/item">
+                <Item />
+              </Route>
+              <Route exact path="/cart">
+                <Cart />
+              </Route>
+              <Route exact path="/purchases">
+                <Purchases />
+              </Route>
+              {/* <Route exact path="/chat">
           </Route>
           <Route exact path="/recruiter">
             <TinderCards user="recruiter"/>
           </Route> */}
-          </Switch>
-      </Router>
-    </div>
-    </Provider>
+            </Switch>
+          </Router>
+        </div>
+      </Provider>
+    </ApolloProvider>
+
   );
 }
 
