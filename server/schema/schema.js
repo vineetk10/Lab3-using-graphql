@@ -82,6 +82,19 @@ const RootQuery = new GraphQLObjectType({
                             })
             }
         },
+        itemsOfOtherShops: {
+            type: new GraphQLList(ItemType),
+            args: { UserId: { type: GraphQLID } },
+            async resolve(parent, args) {
+                return await Item.find({owner : {$ne: args.UserId}})
+                .then((items)=>{
+                    return items
+                })
+                .catch((err)=>{
+                    return { error: "No item Found "+err }
+                })
+            }
+        },
         author: {
             type: AuthorType,
             args: { id: { type: GraphQLID } },

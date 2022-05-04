@@ -9,7 +9,7 @@ import { DropdownButton,Dropdown } from 'react-bootstrap'
 import { connect } from "react-redux";
 import { useApolloClient } from '@apollo/client';
 import {
-  gql
+  gql,
 } from "@apollo/client";
 
 const getAllItemsByQuery = gql`
@@ -26,37 +26,40 @@ query GetAllItems {
 }
 `;
 
+
+const getItemsOfOtherShops = gql`
+query GetAllItemsOfOtherShops($UserId: ID!) {
+  itemsOfOtherShops(UserId: $UserId){
+    isFavorite,
+    itemDescription,
+    itemImageUrl,
+    itemName,
+    price,
+    quantity,
+    salesCount
+  }
+}
+`;
+
 const {user} = isAutheticated();
 function Home({search}) {
   // const { search } = useContext(SearchContext);
   const client = useApolloClient();
+  console.log(client.link.options);
   const [items,setItems] = useState([]);
   const [sortBy, setSortBy] = useState("Price");
   const [lowerLimit, setLowerLimit] = useState(0);
   const [higherLimit, setHigherLimit] = useState(1000);
-  // const { loading, error, data } = useQuery(getAllItemsByQuery);
-  // setItems(data);
-  // console.log("graphql data is ",data);
+
   const getAllItemsOfOtherShops = async(UserId) => {
-    let it= await fetch(`${API}/GetAllItemsOfOtherShops`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${user.token}`
-      },
-      body: JSON.stringify({UserId: UserId })
+    
+    const {data} = await client.query({
+      query: getItemsOfOtherShops,
+      variables : {
+            UserId: UserId
+          }
     })
-    .then(response => {
-      console.log(response);
-      
-      return response.json();
-    })
-    .then(jsonResponse=>{
-      setItems(jsonResponse.items);
-       return jsonResponse;
-    })
-    .catch(err => console.log(err));
+    setItems(data.itemsOfOtherShops);
   }
   const getAllItems = async() => {
     const { data } = await client.query({
@@ -64,12 +67,14 @@ function Home({search}) {
     })
     setItems(data.items);
   }
+
   useEffect(()=>{
     if(user)
       getAllItemsOfOtherShops(user._id);
     else
       getAllItems();
   },[])
+
   const handleSelect=(e)=>{
     console.log(e);
     setSortBy(e);
