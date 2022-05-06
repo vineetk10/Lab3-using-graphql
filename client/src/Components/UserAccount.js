@@ -11,9 +11,26 @@ import { API } from "../backend";
 import { SearchContext } from "../context/SearchContext";
 import { DropdownButton,Dropdown } from 'react-bootstrap'
 import { connect } from "react-redux";
+import { useApolloClient } from '@apollo/client';
+import {
+  gql,
+} from "@apollo/client";
 const {user}= isAutheticated();
-
+const getAllFavorite = gql`
+query GetAllfavoriteItems($UserId: ID!) {
+    favoriteItems(UserId: $UserId){
+    isFavorite,
+    itemDescription,
+    itemImageUrl,
+    itemName,
+    price,
+    quantity,
+    salesCount
+  }
+}
+`;
 function UserAccount({search}) {
+    const client = useApolloClient();
     // const { search } = useContext(SearchContext);
     const history = useHistory();
     const [items,setItems] = useState([]);
@@ -25,25 +42,33 @@ function UserAccount({search}) {
         history.push("/personProfile");
     }
     const getAllFavoriteItems = async(UserId) => {
-        let it= await fetch(`${API}/GetAllFavoriteItems`, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${user.token}`
-        },
-        body: JSON.stringify({UserId: UserId })
-        })
-        .then(response => {
-        console.log(response);
+        const { data } = await client.query({
+            query: getAllFavorite,
+            variables : {
+                UserId: UserId
+              }
+          })
+          setItems(data.favoriteItems);
+        //   setItems(data.favoriteItems);
+        // let it= await fetch(`${API}/GetAllFavoriteItems`, {
+        // method: "POST",
+        // headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json",
+        //     "Authorization": `Bearer ${user.token}`
+        // },
+        // body: JSON.stringify({UserId: UserId })
+        // })
+        // .then(response => {
+        // console.log(response);
         
-        return response.json();
-        })
-        .then(jsonResponse=>{
-        setItems(jsonResponse.items.favorite);
-        return jsonResponse;
-        })
-        .catch(err => console.log(err));
+        // return response.json();
+        // })
+        // .then(jsonResponse=>{
+        // setItems(jsonResponse.items.favorite);
+        // return jsonResponse;
+        // })
+        // .catch(err => console.log(err));
     }
     const handleSelect=(e)=>{
         console.log(e);

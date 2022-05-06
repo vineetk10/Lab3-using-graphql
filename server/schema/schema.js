@@ -1,5 +1,6 @@
 const graphql = require('graphql');
 const Item  = require("../Models/itemSchema");
+const User  = require("../Models/userSchema");
 
 const {
     GraphQLObjectType,
@@ -54,14 +55,24 @@ const ItemType = new GraphQLObjectType({
         salesCount: {type: GraphQLInt},
         itemImageUrl: { type: GraphQLString },
         owner: {type: GraphQLID}
-// isFavorite:false
-// itemDescription:'cake'
-// itemImageUrl:'myImage-1650699851380-407516788'
-// itemName:'cake1'
-// owner:ObjectId {Symbol(id): Buffer(12)}
-// price:30
-// quantity:20
-// salesCount:0
+    })
+});
+
+const FavItemType = new GraphQLObjectType({
+    name: 'FavItem',
+    fields: () => ({
+        itemId: { type: GraphQLID },
+        categoryName: { type: GraphQLString },
+        itemName: { type: GraphQLString },
+        itemDescription: { type: GraphQLString },
+        price: {type: GraphQLInt},
+        quantity: {type: GraphQLInt},
+        isFavorite: {type: GraphQLBoolean},
+        salesCount: {type: GraphQLInt},
+        itemImageUrl: { type: GraphQLString },
+        isGift:{type: GraphQLBoolean},
+        note:{type:GraphQLString},
+        owner: {type: GraphQLID}
     })
 });
 
@@ -89,6 +100,19 @@ const RootQuery = new GraphQLObjectType({
                 return await Item.find({owner : {$ne: args.UserId}})
                 .then((items)=>{
                     return items
+                })
+                .catch((err)=>{
+                    return { error: "No item Found "+err }
+                })
+            }
+        },
+        favoriteItems:{
+            type: new GraphQLList(FavItemType),
+            args: { UserId: { type: GraphQLID } },
+            async resolve(parent, args) {
+                return await User.findOne({_id : args.UserId},"favorite")
+                .then((items)=>{
+                    return items._doc.favorite
                 })
                 .catch((err)=>{
                     return { error: "No item Found "+err }
