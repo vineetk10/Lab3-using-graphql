@@ -1,7 +1,7 @@
 const graphql = require('graphql');
-const Item  = require("../Models/itemSchema");
-const User  = require("../Models/userSchema");
-
+const Item = require("../Models/itemSchema");
+const User = require("../Models/userSchema");
+const multer = require('multer');
 const {
     GraphQLObjectType,
     GraphQLString,
@@ -13,6 +13,20 @@ const {
     GraphQLBoolean
 } = graphql;
 
+const { uploadFile } = require('../s3')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '/home/ec2-user/Lab2/client/public/images')
+        // cb(null, '/Users/vineetkarmiani/Documents/sjsu/Classes/Sem2/273/Lab1/client/public/images')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
+
+const upload = multer({ storage: storage, limits: '50mb' }).single('myImage');
 
 const BookType = new GraphQLObjectType({
     name: 'Book',
@@ -49,12 +63,12 @@ const ItemType = new GraphQLObjectType({
         categoryName: { type: GraphQLString },
         itemName: { type: GraphQLString },
         itemDescription: { type: GraphQLString },
-        price: {type: GraphQLInt},
-        quantity: {type: GraphQLInt},
-        isFavorite: {type: GraphQLBoolean},
-        salesCount: {type: GraphQLInt},
+        price: { type: GraphQLInt },
+        quantity: { type: GraphQLInt },
+        isFavorite: { type: GraphQLBoolean },
+        salesCount: { type: GraphQLInt },
         itemImageUrl: { type: GraphQLString },
-        owner: {type: GraphQLID}
+        owner: { type: GraphQLID }
     })
 });
 
@@ -65,14 +79,21 @@ const FavItemType = new GraphQLObjectType({
         categoryName: { type: GraphQLString },
         itemName: { type: GraphQLString },
         itemDescription: { type: GraphQLString },
-        price: {type: GraphQLInt},
-        quantity: {type: GraphQLInt},
-        isFavorite: {type: GraphQLBoolean},
-        salesCount: {type: GraphQLInt},
+        price: { type: GraphQLInt },
+        quantity: { type: GraphQLInt },
+        isFavorite: { type: GraphQLBoolean },
+        salesCount: { type: GraphQLInt },
         itemImageUrl: { type: GraphQLString },
-        isGift:{type: GraphQLBoolean},
-        note:{type:GraphQLString},
-        owner: {type: GraphQLID}
+        isGift: { type: GraphQLBoolean },
+        note: { type: GraphQLString },
+        owner: { type: GraphQLID }
+    })
+});
+
+const successType = new GraphQLObjectType({
+    name: 'success',
+    fields: () => ({
+        successMessage: { type: GraphQLString }
     })
 });
 
@@ -84,39 +105,39 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(ItemType),
             args: { id: { type: GraphQLID } },
             async resolve(parent, args) {
-                return await Item.find({}).select({"_id":0})
-                            .then((items)=>{
-                                return items
-                            })
-                            .catch((err)=>{
-                                return { error: "No item Found "+err }
-                            })
+                return await Item.find({}).select({ "_id": 0 })
+                    .then((items) => {
+                        return items
+                    })
+                    .catch((err) => {
+                        return { error: "No item Found " + err }
+                    })
             }
         },
         itemsOfOtherShops: {
             type: new GraphQLList(ItemType),
             args: { UserId: { type: GraphQLID } },
             async resolve(parent, args) {
-                return await Item.find({owner : {$ne: args.UserId}})
-                .then((items)=>{
-                    return items
-                })
-                .catch((err)=>{
-                    return { error: "No item Found "+err }
-                })
+                return await Item.find({ owner: { $ne: args.UserId } })
+                    .then((items) => {
+                        return items
+                    })
+                    .catch((err) => {
+                        return { error: "No item Found " + err }
+                    })
             }
         },
-        favoriteItems:{
+        favoriteItems: {
             type: new GraphQLList(FavItemType),
             args: { UserId: { type: GraphQLID } },
             async resolve(parent, args) {
-                return await User.findOne({_id : args.UserId},"favorite")
-                .then((items)=>{
-                    return items._doc.favorite
-                })
-                .catch((err)=>{
-                    return { error: "No item Found "+err }
-                })
+                return await User.findOne({ _id: args.UserId }, "favorite")
+                    .then((items) => {
+                        return items._doc.favorite
+                    })
+                    .catch((err) => {
+                        return { error: "No item Found " + err }
+                    })
             }
         },
         author: {
@@ -177,8 +198,109 @@ const Mutation = new GraphQLObjectType({
                 // books.push(book);
                 // return book;
             }
-        }
+        },
+        addItem: {
+            type: successType,
+            args: {
+                UserId: { type: GraphQLID },
+                Name: { type: GraphQLString },
+                Description: { type: GraphQLString },
+                Price: { type: GraphQLString },
+                Quantity: { type: GraphQLString }
+            },
+            async resolve(parent, args) {
+                let newItemObj = { "owner": args.UserId, "itemName": args.Name, "itemDescription": args.Description, "price": args.Price, "quantity": args.Quantity };
+                let item = new Item(newItemObj);
+                let itemId = await item.save()
+                    .then((item) => {
+                        return item._id;
+                    })
+                    .catch((err) => {
+                        return { successMessage: "Saved saved unsuccessfully" };
+                        //     return res.status(400).json({
+                        //       err: "NOT able to save item in DB"+"Error is"+err
+                        //   });
+                    })
 
+                let newItem = { "itemId": itemId, "itemName": args.Name, "itemDescription": args.Description, "price": args.Price, "quantity": args.Quantity };
+                await User.updateOne({ _id: args.UserId },
+                    { "$push": { 'shop.items': newItem } })
+                    .then((docs) => {
+                        console.log("Updated Docs : ", docs);
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+
+                return { successMessage: "Saved Successfully" };
+                // upload(req, res, async function (err) {
+                //     if (err instanceof multer.MulterError) {
+                //         return res.json({message: err});
+                //     } else if (err) {
+                //         return res.json({message: "Upload failed "+err});
+                //     }
+                //     else
+                //     {
+                //         //   const result = await uploadFile(req.file);
+                //           console.log(result);
+                //           let newItemObj = {"owner":args.UserId,"itemName":args.Name,"itemDescription":args.Description,"price":args.Price,"quantity":args.Quantity,"itemImageUrl":result.Key};
+                //           let item = new Item(newItemObj);
+                //           let itemId = await item.save()
+                //                         .then((item)=>{
+                //                           return item._id;
+                //                         })
+                //                         .catch((err)=>{
+                //                           return res.status(400).json({
+                //                             err: "NOT able to save item in DB"+"Error is"+err
+                //                         });
+                //                         })
+
+                //           let newItem = {"itemId":itemId,"itemName":args.Name,"itemDescription":args.Description,"price":args.Price,"quantity":args.Quantity};
+                //           await User.updateOne({_id:args.UserId}, 
+                //             {"$push":{'shop.items' :newItem}},)
+                //             .then((docs)=>{
+                //               console.log("Updated Docs : ", docs);
+                //             })
+                //             .catch((err)=>{
+                //               console.log(err)
+                //             })
+
+                //             return {successMessage: "Saved Successfully"};
+                //     }
+                //   })
+
+                // books.push(book);
+                // return book;
+            }
+        },
+        editItem: {
+            type: successType,
+            args: {
+                UserId: { type: GraphQLID },
+                ItemId: {type: GraphQLID},
+                Name: { type: GraphQLString },
+                Description: { type: GraphQLString },
+                Price: { type: GraphQLInt },
+                Quantity: { type: GraphQLString },
+            },
+            async resolve(parent, args) {
+                await Item.updateOne({ _id: args.ItemId }, { "itemName": args.Name, "itemDescription": args.Description, "price": args.Price, "quantity": args.Quantity })
+                    .then((item) => {
+                        console.log("Edit successful");
+                    })
+                    .catch((err) => {
+                        console.log("Edit failed " + err);
+                    })
+                await User.updateOne({ _id: args.UserId, 'shop.items.itemId': args.ItemId }, { 'shop.items.$.price': args.Price, 'shop.items.$.itemName': args.Name, 'shop.items.$.itemDescription': args.Description, 'shop.items.$.quantity': args.Quantity })
+                    .then((item) => {
+                        console.log("Edit successful");
+                    })
+                    .catch((err) => {
+                        console.log("Edit failed " + err);
+                    })
+                return { successMessage: "Saved Successfully" };
+            }
+        }
     }
 });
 

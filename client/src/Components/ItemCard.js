@@ -134,7 +134,8 @@ const Cards =({
               {edit && <Pencil onClick={handleShow} size={30}/>}
               <EditItemModal show ={show} setShow={setShow} handleClose={handleClose} item={item}/>
           </div>
-           <img onClick={ItemClick} variant="top" src={`${API}/images/${item.itemImageUrl}`}></img>
+           {/* <img onClick={ItemClick} variant="top" src={`${API}/images/${item.itemImageUrl}`}></img> */}
+           <img onClick={ItemClick} variant="top" src=''></img>
             <Card.Body  >
             {getARedirect(redirect)}
                 <Card.Title>{item.itemName}</Card.Title>

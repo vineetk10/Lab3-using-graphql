@@ -5,7 +5,20 @@ import { Redirect } from 'react-router-dom'
 import { isAutheticated,signin,authenticate } from './../auth/helper/authapicalls';
 import { API } from "../backend";
 import axios from 'axios'
+import {
+    gql,
+    useMutation
+} from "@apollo/client";
+
+const EditItemString = gql`
+mutation ($UserId: ID,$ItemId: ID, $Name: String,$Description: String, $Price:Int, $Quantity: String) {
+    editItem(UserId: $UserId, ItemId:$ItemId,Name: $Name, Description:$Description, Price:$Price, Quantity:$Quantity, ){
+    successMessage
+  }
+}
+`;
 const EditItemModal = ({show,setShow,handleClose,item})=>{
+    const [mutateFunction, { data, loading, error }] = useMutation(EditItemString);
     const [myImage,setMyImage] = useState(item.ItemImage);
     const [values,setValues] = useState({
         Name: item?item.itemName:"",
@@ -55,28 +68,40 @@ const EditItemModal = ({show,setShow,handleClose,item})=>{
             console.log("Invalid form");
             return;
         }
-        var formData = new FormData();
-        var fileField = document.querySelector("input[type='file']");
+    //     var formData = new FormData();
+    //     var fileField = document.querySelector("input[type='file']");
 
-        formData.append('UserId', user._id);
-        formData.append('Name', Name);
-        formData.append('Description', Description);
-        formData.append('Price', Price);
-        formData.append('Quantity', Quantity);
-        formData.append('ItemId', item.itemId);
-        formData.append('myImage', myImage);
+    //     formData.append('UserId', user._id);
+    //     formData.append('Name', Name);
+    //     formData.append('Description', Description);
+    //     formData.append('Price', Price);
+    //     formData.append('Quantity', Quantity);
+    //     formData.append('ItemId', item.itemId);
+    //     formData.append('myImage', myImage);
 
-        axios
-     .post(
-        `${API}/EditItem`,formData )
-     .then((response) => {
-       if (response.status == 201) {
-         console.log(response);
-         success("Data saved successfully");
-       }
-     })
-     .catch((e) => console.log(e));
-        
+    //     axios
+    //  .post(
+    //     `${API}/EditItem`,formData )
+    //  .then((response) => {
+    //    if (response.status == 201) {
+    //      console.log(response);
+    //      success("Data saved successfully");
+    //    }
+    //  })
+    //  .catch((e) => console.log(e));
+    
+     mutateFunction({
+        variables: {
+            UserId: user._id,
+            ItemId: item.itemId,
+            Name: Name,
+            Description: Description,
+            Price: Price,
+            Quantity: Quantity
+        }
+    })
+    if (error)
+        console.log(`Submission error! ${error.message}`);
     handleClose();
 }
     const handleSelect=(e)=>{
