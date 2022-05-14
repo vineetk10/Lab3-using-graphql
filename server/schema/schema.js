@@ -374,6 +374,29 @@ const Mutation = new GraphQLObjectType({
             
             return { successMessage: "Saved Successfully" };
         }
+    },
+    saveUser: {
+        type: successType,
+        args: {
+            UserId: { type: GraphQLID },
+            Gender: {type: GraphQLString},
+            Country: {type: GraphQLString},
+            City: {type: GraphQLString},
+            BirthdayMonth: {type: GraphQLString},
+            BirthdayYear: {type: GraphQLString},
+            About: {type: GraphQLString}
+        },
+        async resolve(parent, args) {
+            await User.updateOne({_id:args.UserId},{'gender':args.Gender,'country':args.Country,'city':args.City,'birthdayMonth':args.BirthdayMonth,'birthdayYear':args.BirthdayYear,'about':args.About})
+            .then((user)=>{
+              console.log("Updated successfully")
+            })
+            .catch((err)=>{
+              console.log("Updation unsuccessfull "+err)
+            })
+            
+            return { successMessage: "Saved Successfully" };
+        }
     }
     }
 });
