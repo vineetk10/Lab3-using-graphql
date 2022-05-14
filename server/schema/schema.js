@@ -73,6 +73,22 @@ const ItemType = new GraphQLObjectType({
     })
 });
 
+const OrderType = new GraphQLObjectType({
+    name: 'Order',
+    fields: ()=>({
+        _id: { type: GraphQLID },
+        orderDate: {type: GraphQLString},
+        items: {type: new GraphQLList(ItemType)}
+    })
+})
+
+const PurchaseType = new GraphQLObjectType({
+    name: 'Purchase',
+    fields: ()=>({
+        _id: { type: GraphQLID },
+        orders: {type: new GraphQLList(OrderType)}
+    })
+})
 const ItemInputType = new GraphQLInputObjectType({
     name: 'InputItem',
     fields: () => ({
@@ -157,20 +173,20 @@ const RootQuery = new GraphQLObjectType({
                     })
             }
         },
-        author: {
-            type: AuthorType,
-            args: { id: { type: GraphQLID } },
-            resolve(parent, args) {
-            }
-        },
-        books: {
-            type: new GraphQLList(BookType),
-            resolve(parent, args) {
-            }
-        },
-        authors: {
-            type: new GraphQLList(AuthorType),
-            resolve(parent, args) {
+        purchases: {
+            type: PurchaseType,
+            args: {
+                UserId: { type: GraphQLID }
+            },
+            async resolve(parent, args) {
+                let orders = await User.findOne({_id: args.UserId},"orders")
+                .then((orders)=>{
+                    return orders;
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+                return orders;
             }
         }
     }
@@ -339,6 +355,7 @@ const Mutation = new GraphQLObjectType({
                 return { successMessage: "Saved Successfully" };
             }
         }
+       
     }
 });
 
