@@ -49,11 +49,16 @@ var userSchema = new mongoose.Schema(
       },
       shop: {
           shopName: {
-              type: String
+              type: String,
+              unique: false,
+              sparse:true
           },
           shopImageUrl: {
             type: String,
-            trim: true
+            trim: true,
+            default:"",
+            unique: false,
+            sparse:true
           },
           items: {
             default: [],

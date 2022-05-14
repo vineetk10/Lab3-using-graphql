@@ -76,7 +76,7 @@ const Cards =({
     }
 
   const addToCart = () => {
-    item.Quantity -= 1;
+    // item.quantity = 1;
     addItemToCart(item, () => setRedirect(true));
   };
 

@@ -18,9 +18,7 @@ import store from "./store";
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
+  ApolloProvider
 } from "@apollo/client";
 
 const client = new ApolloClient({

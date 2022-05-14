@@ -50,7 +50,7 @@ function EtsyNavbar({markComplete}) {
           })
           .then(jsonResponse=>{
             //   console.log(jsonResponse.shopName);
-            setShop(jsonResponse.shopName[0].shop.shopName);
+            setShop(jsonResponse.shopName[0]?.shop?.shopName);
              return jsonResponse;
           })
           .catch(err => console.log(err));

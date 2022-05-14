@@ -6,21 +6,47 @@ import { isAutheticated} from './../auth/helper/authapicalls';
 import { useHistory } from 'react-router-dom'
 import { connect } from "react-redux";
 import { CHANGE_TOTAL_PRICE } from "../action.types";
+import {
+  gql,
+  useMutation
+} from "@apollo/client";
 
+const SaveOrderString = gql`
+mutation ($UserId: ID, $Items: [InputItem]) {
+    saveOrder(UserId: $UserId, Items: $Items ){
+    successMessage
+  }
+}
+`;
 const Paymentb = ({ products,totalPrice,markComplete }) => {
+  const [mutateFunction, { data, loading, error }] = useMutation(SaveOrderString);
   const history = useHistory();
     const {user} = isAutheticated()
   const SaveOrder = async ()=>{
-    let productWithQuantitiesMoreThanZero = products.filter((product)=>product.quantity!=="0");
-    let OrderId = axios
-    .post(
-       `${API}/SaveOrder`,{"UserId":user._id, "Items": productWithQuantitiesMoreThanZero} )
-    .then((response) => {
-      if (response.status == 201) {
-        console.log(response);
+    let productWithQuantitiesMoreThanZero = products.filter((product)=>product.quantity!=="0").reduce((acc, curr)=>{
+      const newObj = {count: 1,
+        isFavorite: curr.isFavorite,
+        itemDescription: curr.itemDescription,
+        itemImageUrl: curr.itemImageUrl,
+        itemName: curr.itemName,
+        price: curr.price,
+        quantity: curr.quantity,
+        salesCount: curr.salesCount
+        }
+        acc.push(newObj);
+        return acc;
+    },[]);
+
+
+    mutateFunction({
+      variables: {
+          UserId: user._id,
+          Items: productWithQuantitiesMoreThanZero
       }
-    })
-    .catch((e) => console.log(e));
+  })
+  if (error)
+      console.log(`Submission error! ${error.message}`);
+
     history.push('/purchases');
 
   }

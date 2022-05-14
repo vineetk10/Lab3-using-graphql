@@ -10,7 +10,8 @@ const {
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLBoolean
+    GraphQLBoolean,
+    GraphQLInputObjectType
 } = graphql;
 
 const { uploadFile } = require('../s3')
@@ -71,6 +72,22 @@ const ItemType = new GraphQLObjectType({
         owner: { type: GraphQLID }
     })
 });
+
+const ItemInputType = new GraphQLInputObjectType({
+    name: 'InputItem',
+    fields: () => ({
+        count: { type: GraphQLInt },
+        isFavorite: { type: GraphQLBoolean },
+        itemDescription: { type: GraphQLString },
+        itemImageUrl: { type: GraphQLString },
+        itemName: { type: GraphQLString },
+        price: { type: GraphQLInt },
+        quantity: { type: GraphQLInt },
+        salesCount: { type: GraphQLInt },
+        // __typename: { type: GraphQLString }
+    })
+});
+
 
 const FavItemType = new GraphQLObjectType({
     name: 'FavItem',
@@ -277,7 +294,7 @@ const Mutation = new GraphQLObjectType({
             type: successType,
             args: {
                 UserId: { type: GraphQLID },
-                ItemId: {type: GraphQLID},
+                ItemId: { type: GraphQLID },
                 Name: { type: GraphQLString },
                 Description: { type: GraphQLString },
                 Price: { type: GraphQLInt },
@@ -298,6 +315,26 @@ const Mutation = new GraphQLObjectType({
                     .catch((err) => {
                         console.log("Edit failed " + err);
                     })
+                return { successMessage: "Saved Successfully" };
+            }
+        },
+        saveOrder: {
+            type: successType,
+            args: {
+                UserId: { type: GraphQLID },
+                Items: { type: new GraphQLList(ItemInputType) },
+            },
+            async resolve(parent, args) {
+                let orderObj = { "orderDate": Date.now(), "items": args.Items }
+                await User.updateOne({ _id: args.UserId },
+                    { "$push": { 'orders': orderObj } })
+                    .then((docs) => {
+                        console.log("Updated Docs : ", docs);
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+
                 return { successMessage: "Saved Successfully" };
             }
         }
