@@ -179,43 +179,6 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-        addAuthor: {
-            type: AuthorType,
-            args: {
-                name: { type: GraphQLString },
-                age: { type: GraphQLInt },
-                id: { type: GraphQLID }
-            },
-            resolve(parent, args) {
-                let author = {
-                    name: args.name,
-                    age: args.age,
-                    id: args.id
-                };
-                // authors.push(author)
-                // console.log("Authors", authors);
-                // return author;
-            }
-        },
-
-        addBook: {
-            type: BookType,
-            args: {
-                name: { type: GraphQLString },
-                genre: { type: GraphQLString },
-                authorId: { type: GraphQLID },
-            },
-            resolve(parent, args) {
-                let book = {
-                    name: args.name,
-                    genre: args.genre,
-                    authorId: args.authorId,
-                    // id: books.length+1
-                }
-                // books.push(book);
-                // return book;
-            }
-        },
         addItem: {
             type: successType,
             args: {
@@ -335,6 +298,26 @@ const Mutation = new GraphQLObjectType({
                         console.log(err)
                     })
 
+                return { successMessage: "Saved Successfully" };
+            }
+        },
+        saveFavItem: {
+            type: successType,
+            args: {
+                UserId: { type: GraphQLID },
+                Item: { type: ItemInputType },
+                IsFavorite: { type: GraphQLBoolean }
+            },
+            async resolve(parent, args) {
+                await User.updateOne({ _id: args.UserId }, { "$push": { 'favorite': args.Item } })
+                    .then((item) => {
+                        console.log("Updated successfully");
+                    })
+                    .catch((err) => {
+                        console.log("Updation Failed");
+                    })
+                // let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
+                // return res.json({message:" records inserted"});
                 return { successMessage: "Saved Successfully" };
             }
         }

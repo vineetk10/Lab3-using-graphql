@@ -11,6 +11,18 @@ import EditItemModal from "./EditItemModal"
 import { connect } from "react-redux";
 import "../css/Cards.css"
 import { CHANGE_TOTAL_PRICE } from "../action.types";
+import {
+  gql,
+  useMutation
+} from "@apollo/client";
+
+const SaveFavItem = gql`
+mutation ($UserId: ID, $Items: InputItem, $IsFavorite: Boolean) {
+  saveFavItem(UserId: $UserId, Items: $Items, IsFavorite: $IsFavorite ){
+    successMessage
+  }
+}
+`;
 
 const {user}= isAutheticated();
 const Cards =({
@@ -39,25 +51,35 @@ const Cards =({
 
     // const { currency, dispatch1} = useContext(CurrencyContext);
     const FavClick = ()=>{
+      const [mutateFunction, { data, loading, error }] = useMutation(SaveFavItem);
         let val = !fav;
         setFav(!fav);
         if(val)
         {
-            fetch(`${API}/SaveFavItem`, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
-              })
-              .then(response => {
-                return response.json();
-              })
-              .then(jsonResponse=>{
-                 return jsonResponse.json();
-              })
-              .catch(err => console.log(err));
+          mutateFunction({
+            variables: {
+                UserId: user._id,
+                Items: item,
+                IsFavorite:true
+            }
+        })
+        if (error)
+            console.log(`Submission error! ${error.message}`);
+            // fetch(`${API}/SaveFavItem`, {
+            //     method: "POST",
+            //     headers: {
+            //       Accept: "application/json",
+            //       "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
+            //   })
+            //   .then(response => {
+            //     return response.json();
+            //   })
+            //   .then(jsonResponse=>{
+            //      return jsonResponse.json();
+            //   })
+            //   .catch(err => console.log(err));
         }
         else
         {

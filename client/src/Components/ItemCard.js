@@ -9,6 +9,18 @@ import { addItemToCart, removeItemFromCart } from "./Core/cartHelper.js";
 import { CurrencyContext} from "../context/CurrencyContext";
 import EditItemModal from "./EditItemModal"
 import { connect } from "react-redux";
+import {
+  gql,
+  useMutation
+} from "@apollo/client";
+
+const SaveFavItem = gql`
+mutation ($UserId: ID, $Item: InputItem, $IsFavorite: Boolean) {
+  saveFavItem(UserId: $UserId, Item: $Item, IsFavorite: $IsFavorite ){
+    successMessage
+  }
+}
+`;
 const {user}= isAutheticated();
 const Cards =({
   // currency,
@@ -19,6 +31,7 @@ const Cards =({
   defaultIsFav = false,
   currency
 })=>{
+  const [mutateFunction, { data, loading, error }] = useMutation(SaveFavItem);
   console.log(item);
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState(null);
@@ -37,21 +50,30 @@ const Cards =({
         setFav(!fav);
         if(val)
         {
-            fetch(`${API}/SaveFavItem`, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
-              })
-              .then(response => {
-                return response.json();
-              })
-              .then(jsonResponse=>{
-                 return jsonResponse.json();
-              })
-              .catch(err => console.log(err));
+          mutateFunction({
+            variables: {
+                UserId: user._id,
+                Items: item,
+                IsFavorite:true
+            }
+        })
+        if (error)
+            console.log(`Submission error! ${error.message}`);
+            // fetch(`${API}/SaveFavItem`, {
+            //     method: "POST",
+            //     headers: {
+            //       Accept: "application/json",
+            //       "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
+            //   })
+            //   .then(response => {
+            //     return response.json();
+            //   })
+            //   .then(jsonResponse=>{
+            //      return jsonResponse.json();
+            //   })
+            //   .catch(err => console.log(err));
         }
         else
         {
