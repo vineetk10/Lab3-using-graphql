@@ -52,29 +52,6 @@ function Purchases() {
     const endOffset = itemOffset + pageSize;
     setCurrentItems(data.purchases.orders.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(data.purchases.orders.length / pageSize));
-
-
-    // fetch(`${API}/GetAllPurchases`, {
-    //     method: "POST",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({UserId: UserId })
-    //   })
-    //   .then(response => {
-    //     console.log(response);
-    //     return response.json();
-    //   })
-    //   .then(jsonResponse=>{
-    //     console.log(jsonResponse);
-    //     setPurchases(jsonResponse.orders.orders);
-    //     const endOffset = itemOffset + pageSize;
-    //     setCurrentItems(jsonResponse.orders.orders.slice(itemOffset, endOffset));
-    //     setPageCount(Math.ceil(jsonResponse.orders.orders.length / pageSize));
-    //      return jsonResponse;
-    //   })
-    //   .catch(err => console.log(err));
   }
   const handlePageClick = (event) => {
     const newOffset = (event.selected * pageSize) % purchases.length;
