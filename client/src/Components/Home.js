@@ -30,6 +30,7 @@ query GetAllItems {
 const getItemsOfOtherShops = gql`
 query GetAllItemsOfOtherShops($UserId: ID!) {
   itemsOfOtherShops(UserId: $UserId){
+    _id,
     isFavorite,
     itemDescription,
     itemImageUrl,

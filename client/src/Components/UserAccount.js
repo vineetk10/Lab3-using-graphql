@@ -19,6 +19,7 @@ const {user}= isAutheticated();
 const getAllFavorite = gql`
 query GetAllfavoriteItems($UserId: ID!) {
     favoriteItems(UserId: $UserId){
+    _id,
     isFavorite,
     itemDescription,
     itemImageUrl,

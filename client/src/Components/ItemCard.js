@@ -21,6 +21,13 @@ mutation ($UserId: ID, $Item: InputItem, $IsFavorite: Boolean) {
   }
 }
 `;
+const RemoveFavItem = gql`
+mutation ($UserId: ID, $ItemId: ID, $IsFavorite: Boolean) {
+  removeFavItem(UserId: $UserId, ItemId: $ItemId, IsFavorite: $IsFavorite ){
+    successMessage
+  }
+}
+`;
 const {user}= isAutheticated();
 const Cards =({
   // currency,
@@ -32,6 +39,7 @@ const Cards =({
   currency
 })=>{
   const [mutateFunction, { data, loading, error }] = useMutation(SaveFavItem);
+  const [mutateFunction1, { data1, loading1, error1 }] = useMutation(RemoveFavItem);
   console.log(item);
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState(null);
@@ -50,48 +58,38 @@ const Cards =({
         setFav(!fav);
         if(val)
         {
+            const newObj = {
+              count: item.count,
+              isFavorite: item.isFavorite,
+              itemDescription: item.itemDescription,
+              itemImageUrl: item.itemImageUrl,
+              itemName: item.itemName,
+              price: item.price,
+              quantity: item.quantity,
+              salesCount: item.salesCount
+              }
+
           mutateFunction({
             variables: {
                 UserId: user._id,
-                Items: item,
+                Item: newObj,
                 IsFavorite:true
             }
         })
         if (error)
             console.log(`Submission error! ${error.message}`);
-            // fetch(`${API}/SaveFavItem`, {
-            //     method: "POST",
-            //     headers: {
-            //       Accept: "application/json",
-            //       "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify({UserId:user._id, Item: item,IsFavorite:true })
-            //   })
-            //   .then(response => {
-            //     return response.json();
-            //   })
-            //   .then(jsonResponse=>{
-            //      return jsonResponse.json();
-            //   })
-            //   .catch(err => console.log(err));
         }
         else
-        {
-            fetch(`${API}/RemoveFavItem`, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({UserId:user._id, ItemId: item._id,IsFavorite:true })
-              })
-              .then(response => {
-                return response.json();
-              })
-              .then(jsonResponse=>{
-                 return jsonResponse.json();
-              })
-              .catch(err => console.log(err));
+        { 
+          mutateFunction1({
+            variables: {
+                UserId: user._id,
+                ItemId: item._id,
+                IsFavorite:true
+            }
+        })
+        if (error)
+            console.log(`Submission error! ${error.message}`);
         }
         if(defaultIsFav)
           window.location.reload();

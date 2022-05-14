@@ -92,7 +92,7 @@ const ItemInputType = new GraphQLInputObjectType({
 const FavItemType = new GraphQLObjectType({
     name: 'FavItem',
     fields: () => ({
-        itemId: { type: GraphQLID },
+        _id: { type: GraphQLID },
         categoryName: { type: GraphQLString },
         itemName: { type: GraphQLString },
         itemDescription: { type: GraphQLString },
@@ -316,8 +316,26 @@ const Mutation = new GraphQLObjectType({
                     .catch((err) => {
                         console.log("Updation Failed");
                     })
-                // let rowsInserted = await db.query(`INSERT INTO UserItem(UserId,ItemId,IsFavorite) VALUES('${req.body.UserId}','${req.body.ItemId}',true);`);
-                // return res.json({message:" records inserted"});
+                
+                return { successMessage: "Saved Successfully" };
+            }
+        },
+        removeFavItem: {
+            type: successType,
+            args: {
+                UserId: { type: GraphQLID },
+                ItemId: { type: GraphQLID },
+                IsFavorite: { type: GraphQLBoolean }
+            },
+            async resolve(parent, args) {
+                await User.updateOne({_id: args.UserId},{"$pull":{'favorite' :{_id:args.ItemId}}})
+                .then((item)=>{
+                  console.log("Deleted successfully");
+                })
+                .catch((err)=>{
+                  console.log("Deletion Failed");
+                })
+                
                 return { successMessage: "Saved Successfully" };
             }
         }
