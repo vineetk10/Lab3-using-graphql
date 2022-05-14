@@ -354,8 +354,27 @@ const Mutation = new GraphQLObjectType({
                 
                 return { successMessage: "Saved Successfully" };
             }
+        },
+       saveShop: {
+        type: successType,
+        args: {
+            userId: { type: GraphQLID },
+            shopName: {type: GraphQLString}
+        },
+        async resolve(parent, args) {
+            User.updateOne({_id:args.userId}, 
+                {'shop.shopName' :args.shopName}, function (err, docs) {
+                if (err){
+                    console.log(err)
+                }
+                else{
+                    console.log("Updated Docs : ", docs);
+                }
+            });
+            
+            return { successMessage: "Saved Successfully" };
         }
-       
+    }
     }
 });
 

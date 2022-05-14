@@ -5,7 +5,20 @@ import { API } from "../backend";
 import Header from "../Components/Core/Header"
 import { useHistory } from 'react-router-dom'
 import { isAutheticated } from '../auth/helper/authapicalls';
+import {
+  gql,
+  useMutation
+} from "@apollo/client";
+
+const SaveShop = gql`
+mutation ($userId: ID, $shopName: String) {
+  saveShop(userId: $userId, shopName: $shopName ){
+    successMessage
+  }
+}
+`;
 function Shop() {
+    const [mutateFunction, { data, loading, error }] = useMutation(SaveShop);
     const {user} = isAutheticated();
     const [shopName, setShopName] = useState("");
     const history = useHistory();
@@ -36,22 +49,33 @@ function Shop() {
     const SaveChanges = async()=>{
       if(shopName.length>0)
       {
-        let shop= await fetch(`${API}/SaveShop`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({shopName:shopName, userId: user._id})
-        })
-        .then(response => {
-          return response.json();
-        })
-        .catch(err => console.log(err));
-        // console.log(shop.shopId[0].ShopId);
-          history.push({
-            pathname:"/shopHome"
-          });
+        mutateFunction({
+          variables: {
+              userId: user._id,
+              shopName:shopName
+          }
+      })
+      if (error)
+          console.log(`Submission error! ${error.message}`);
+      history.push({
+          pathname:"/shopHome"
+        });
+        // let shop= await fetch(`${API}/SaveShop`, {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json"
+        //   },
+        //   body: JSON.stringify({shopName:shopName, userId: user._id})
+        // })
+        // .then(response => {
+        //   return response.json();
+        // })
+        // .catch(err => console.log(err));
+        // // console.log(shop.shopId[0].ShopId);
+        //   history.push({
+        //     pathname:"/shopHome"
+        //   });
       }
     }
     const handleChange = name => event => {
