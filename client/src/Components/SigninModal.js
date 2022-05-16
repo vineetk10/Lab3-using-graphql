@@ -3,8 +3,22 @@ import { Modal } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 // import Create from '../teacher/CreateQuestionPaper';
 import { isAutheticated,signin,authenticate,signup } from './../auth/helper/authapicalls';
+import {
+    gql,
+    useMutation
+  } from "@apollo/client";
+  
+  const Signup = gql`
+  mutation($firstName: String, $email: String, $password: String) {
+    signup(firstName: $firstName, email: $email, password: $encry_password ){
+      successMessage
+    }
+  }
+  `;
 
+ 
 const SigninModal = ({show,setShow,handleClose})=>{
+    const [mutateFunction, { data, loading, error }] = useMutation(Signup);
     const [values,setValues] = useState({
         Email: "",
         UserPassword: "",
@@ -54,6 +68,7 @@ const SigninModal = ({show,setShow,handleClose})=>{
         //     console.log("Invalid form");
         //     return;
         // }
+       
         signin({email:Email, password:UserPassword})
         .then(data =>{
             if(data.error){
@@ -78,17 +93,27 @@ const SigninModal = ({show,setShow,handleClose})=>{
         //     console.log("Invalid form");
         //     return;
         // }
-        signup({firstName: Name,email:Email, encry_password:UserPassword})
-        .then(data =>{
-            if(data.error){
-              setValues({...values,error:data.error,loading:false})
-              console.log(data.error)
-            }else{
-                setIsSignIn(true);
-                console.log("sign up successful")
+        mutateFunction({
+            variables: {
+                firstName: Name,
+                email:Email, 
+                encry_password:UserPassword
             }
-          })
-          .catch(err=>console.log(err))
+        })
+        if (error)
+            console.log(`Submission error! ${error.message}`);
+        setIsSignIn(true);
+        // signup({firstName: Name,email:Email, encry_password:UserPassword})
+        // .then(data =>{
+        //     if(data.error){
+        //       setValues({...values,error:data.error,loading:false})
+        //       console.log(data.error)
+        //     }else{
+        //         setIsSignIn(true);
+        //         console.log("sign up successful")
+        //     }
+        //   })
+        //   .catch(err=>console.log(err))
     }
 
     return(

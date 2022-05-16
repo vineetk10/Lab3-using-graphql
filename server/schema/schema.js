@@ -29,33 +29,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage, limits: '50mb' }).single('myImage');
 
-const BookType = new GraphQLObjectType({
-    name: 'Book',
-    fields: () => ({
-        id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        genre: { type: GraphQLString },
-        author: {
-            type: AuthorType,
-            resolve(parent, args) {
-            }
-        }
-    })
-});
 
-const AuthorType = new GraphQLObjectType({
-    name: 'Author',
-    fields: () => ({
-        id: { type: GraphQLID },
-        name: { type: GraphQLString },
-        age: { type: GraphQLInt },
-        books: {
-            type: new GraphQLList(BookType),
-            resolve(parent, args) {
-            }
-        }
-    })
-});
 
 const ItemType = new GraphQLObjectType({
     name: 'Item',
@@ -89,6 +63,7 @@ const PurchaseType = new GraphQLObjectType({
         orders: {type: new GraphQLList(OrderType)}
     })
 })
+
 const ItemInputType = new GraphQLInputObjectType({
     name: 'InputItem',
     fields: () => ({
@@ -395,6 +370,25 @@ const Mutation = new GraphQLObjectType({
               console.log("Updation unsuccessfull "+err)
             })
             
+            return { successMessage: "Saved Successfully" };
+        }
+    },
+    signup: {
+        type: successType,
+        args: {
+            firstName: { type: GraphQLString },
+            email: { type: GraphQLString },
+            encry_password: { type: GraphQLString }
+        },
+        async resolve(parent, args) {
+            const user = new User(args);
+            user.save((err, user)=>{
+                 if(err){
+                     console.log(err);
+                     return { successMessage: "err" };
+                 }
+            });
+
             return { successMessage: "Saved Successfully" };
         }
     }
